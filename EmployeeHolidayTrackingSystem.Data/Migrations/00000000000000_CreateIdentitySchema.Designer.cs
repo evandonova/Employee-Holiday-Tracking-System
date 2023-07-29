@@ -9,7 +9,7 @@ using System;
 
 namespace EmployeeHolidayTrackingSystem.Data.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
+    [DbContext(typeof(EmployeeHolidayDbContext))]
     [Migration("00000000000000_CreateIdentitySchema")]
     partial class CreateIdentitySchema
     {
