@@ -7,10 +7,10 @@ using static EmployeeHolidayTrackingSystem.Data.DataConstants.HolidayRequestStat
 
 namespace EmployeeHolidayTrackingSystem.Data
 {
-    public class EmployeeHolidayDbContext : IdentityDbContext
+    public class EmployeeHolidayDbContext : IdentityDbContext<User>
     {
-        private IdentityUser employeeUser = null!;
-        private IdentityUser supervisorUser = null!;
+        private User employeeUser = null!;
+        private User supervisorUser = null!;
         private Employee employee = null!;
         private Supervisor supervisor = null!;
         private IEnumerable<HolidayRequestStatus> holidayRequestStatuses = new List<HolidayRequestStatus>();
@@ -67,7 +67,7 @@ namespace EmployeeHolidayTrackingSystem.Data
             GenerateSeedData();
 
             builder
-                .Entity<IdentityUser>()
+                .Entity<User>()
                 .HasData(this.employeeUser, this.supervisorUser);
 
             builder
@@ -95,26 +95,30 @@ namespace EmployeeHolidayTrackingSystem.Data
 
         private void GenerateUsers()
         {
-            var hasher = new PasswordHasher<IdentityUser>();
+            var hasher = new PasswordHasher<User>();
 
-            this.employeeUser = new IdentityUser()
+            this.employeeUser = new User()
             {
                 Id = "cbd615eb-e41f-48a7-9611-51d126377966",
                 UserName = "employee@mail.com",
                 NormalizedUserName = "EMPLOYEE@MAIL.COM",
                 Email = "employee@mail.com",
-                NormalizedEmail = "EMPLOYEE@MAIL.COM"
+                NormalizedEmail = "EMPLOYEE@MAIL.COM",
+                FirstName = "Employee",
+                LastName = "Andersen"
             };
 
             this.employeeUser.PasswordHash = hasher.HashPassword(this.employeeUser, "employee123#");
 
-            this.supervisorUser = new IdentityUser()
+            this.supervisorUser = new User()
             {
                 Id = "00ac9dd5-0bb7-46e2-b8d8-0cf24d426689",
                 UserName = "supervisor@mail.com",
                 NormalizedUserName = "SUPERVISOR@MAIL.COM",
                 Email = "supervisor@mail.com",
-                NormalizedEmail = "SUPERVISOR@MAIL.COM"
+                NormalizedEmail = "SUPERVISOR@MAIL.COM",
+                FirstName = "Supervisor",
+                LastName = "Jefferson"
             };
 
             this.supervisorUser.PasswordHash = hasher.HashPassword(this.supervisorUser, "supervisor123#");

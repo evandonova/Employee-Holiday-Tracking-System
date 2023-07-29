@@ -2,6 +2,12 @@
 {
     public class DataConstants
     {
+        public class User
+        {
+            public const int FirstNameMaxLength = 20;
+            public const int LastNameMaxLength = 30;
+        }
+
         public class Employee
         {
             public const int InitialHolidayDaysCount = 20;

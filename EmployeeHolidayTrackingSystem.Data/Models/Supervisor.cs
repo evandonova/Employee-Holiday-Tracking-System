@@ -10,7 +10,7 @@ namespace EmployeeHolidayTrackingSystem.Data.Models
         [Required]
         public string UserId { get; init; } = null!;
 
-        public IdentityUser User { get; init; } = null!;
+        public User User { get; init; } = null!;
 
         public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
 

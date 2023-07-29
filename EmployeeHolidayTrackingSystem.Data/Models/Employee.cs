@@ -14,7 +14,7 @@ namespace EmployeeHolidayTrackingSystem.Data.Models
         [Required]
         public string UserId { get; init; } = null!;
 
-        public IdentityUser User { get; init; } = null!;
+        public User User { get; init; } = null!;
 
         public Guid SupervisorId { get; init; }
 
