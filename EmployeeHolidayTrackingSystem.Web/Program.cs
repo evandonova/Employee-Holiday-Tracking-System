@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity;
 using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
@@ -23,10 +24,13 @@ builder.Services
         options.Password.RequireNonAlphanumeric = false;
         options.Password.RequiredUniqueChars = 0;
     })
+    .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EmployeeHolidayDbContext>();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
+
+app.PrepareDatabase();
 
 if (app.Environment.IsDevelopment())
 {
