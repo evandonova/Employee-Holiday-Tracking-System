@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using EmployeeHolidayTrackingSystem.Data;
-using Microsoft.AspNetCore.Builder;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -10,6 +9,7 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 
 builder.Services.AddDbContext<EmployeeHolidayDbContext>(options =>
     options.UseSqlServer(connectionString));
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services
