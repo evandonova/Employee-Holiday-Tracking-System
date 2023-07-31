@@ -2,7 +2,7 @@
 
 namespace EmployeeHolidayTrackingSystem.Web.Models.HolidayRequests
 {
-    public class HolidayRequestModel
+    public class HolidayRequestFormModel
     {
         [Display(Name = "Start Date")]
         public string StartDate { get; set; } = null!;
