@@ -4,7 +4,6 @@ using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 
 using static EmployeeHolidayTrackingSystem.Web.Constants;
-using static EmployeeHolidayTrackingSystem.Data.DataConstants.HolidayRequestStatusEnum;
 
 namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
 {
@@ -60,15 +59,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
             {
                 new HolidayRequestStatus()
                 {
-                    Title = Pending.ToString()
+                    Title = HolidayRequestStatusEnum.Pending.ToString()
                 },
                 new HolidayRequestStatus()
                 {
-                    Title = Approved.ToString()
+                    Title = HolidayRequestStatusEnum.Approved.ToString()
                 },
                 new HolidayRequestStatus()
                 {
-                    Title = Disapproved.ToString()
+                    Title = HolidayRequestStatusEnum.Disapproved.ToString()
                 }
             };
 

@@ -22,12 +22,5 @@
         {
             public const int TitleMaxLength = 20;
         }
-
-        public enum HolidayRequestStatusEnum
-        {
-            Pending = 1,
-            Approved = 2,
-            Disapproved = 3
-        }
     }
 }

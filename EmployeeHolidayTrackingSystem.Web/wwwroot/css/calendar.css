@@ -1,0 +1,133 @@
+﻿body {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 400;
+}
+
+h3, h4, h5 {
+    font-weight: 300 !important;
+}
+
+.calendar-wrapper {
+    height: auto;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.calendar-header {
+    background-color: rgba(18, 15, 25, 0.25);
+    height: 30%;
+    padding: 0px;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+    position: relative;
+}
+
+.header-title {
+    padding-left: 15%;
+}
+
+.calendar-content {
+    background-color: #fff;
+    padding-left: 0%;
+    padding-right: 0%;
+    overflow: hidden;
+}
+
+.content-wrapper {
+    margin-left: 300px;
+    display: inline
+}
+
+#table-header .row .col {
+    padding: .75rem;
+}
+
+#table-body .col:hover {
+    cursor: pointer;
+    background-color: #E0E0E0;
+}
+
+#table-body .row .col {
+    padding: 1rem .75rem;
+}
+
+#table-body .col {
+    border: 1px solid transparent;
+}
+
+#table-body {
+}
+
+    #table-body .row {
+        margin-bottom: 0;
+    }
+
+    #table-body .col {
+        padding-top: 1.5rem;
+        padding-bottom: 1rem;
+    }
+
+#calendar-table {
+    text-align: center;
+}
+
+.prev-button {
+    position: absolute;
+    cursor: pointer;
+    left: 0%;
+    top: 35%;
+    color: grey !important;
+}
+
+    .prev-button i {
+        font-size: 4em;
+    }
+
+.next-button {
+    position: absolute;
+    cursor: pointer;
+    right: 0%;
+    top: 35%;
+    color: grey !important;
+}
+
+    .next-button i {
+        font-size: 4em;
+    }
+
+.content-wrapper {
+    margin-left: 0px;
+}
+
+body .row {
+    margin-bottom: 0;
+}
+
+@media (max-height:635px) {
+    h5 {
+        font-size: 0px;
+    }
+
+    p {
+        font-size: 0px;
+    }
+
+    h4 {
+        font-size: 0px;
+    }
+
+    .col {
+        padding: 0;
+    }
+}
+
+@media (max-width:520px) {
+    body .row {
+        flex-wrap: nowrap;
+    }
+
+    h5 {
+        font-size: 15px;
+    }
+}
