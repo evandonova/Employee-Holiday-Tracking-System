@@ -19,7 +19,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Controllers
         {
             var dateToday = DateTime.UtcNow;
 
-            var model = new HolidayRequestModel()
+            var model = new HolidayRequestFormModel()
             {
                 StartDate = dateToday.ToString("dd MMMM yyyy"),
                 EndDate = dateToday.ToString("dd MMMM yyyy")
@@ -29,7 +29,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(HolidayRequestModel requestModel)
+        public IActionResult Create(HolidayRequestFormModel requestModel)
         {
             var startDate = DateTime.Parse(requestModel.StartDate);
             var endDate = DateTime.Parse(requestModel.EndDate);
@@ -58,6 +58,12 @@ namespace EmployeeHolidayTrackingSystem.Web.Controllers
             };
 
             this.data.HolidayRequests.Add(request);
+
+            var holidayDaySpan = endDate.Subtract(startDate);
+            var holidayDaysCount = holidayDaySpan.Days + 1;
+
+            loggedInEmployee.HolidayDaysRemaining -= holidayDaysCount;
+
             this.data.SaveChanges();
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
