@@ -30,7 +30,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
 
         public IActionResult Index()
         {
-            var supervisor = this.supervisors.GetSupervisor(this.User.Id());
+            var supervisor = this.supervisors.GetSupervisorByUserId(this.User.Id());
 
             var pendingStatusId = this.statuses.GetPendingStatusId();
 

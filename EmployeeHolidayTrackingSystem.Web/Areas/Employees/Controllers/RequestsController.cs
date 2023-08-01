@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models;
+using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
-using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 {
@@ -29,14 +29,14 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
         public IActionResult Details(Guid id)
         {
-            var request = this.requests.GetById(id);
+            var request = this.requests.GetRequestById(id);
 
             if (request is null)
             {
                 return BadRequest();
             }
 
-            var requestStatusTitle = this.statuses.GetTitleById(request.StatusId);
+            var requestStatusTitle = this.statuses.GetStatusTitleById(request.StatusId);
 
             var model = new EmployeeRequestViewModel()
             {

@@ -10,21 +10,22 @@ namespace EmployeeHolidayTrackingSystem.Services.RequestStatuses
         public RequestStatusService(EmployeeHolidayDbContext data)
             => this.data = data;
 
-        public string? GetTitleById(int statusId)
+        public string? GetStatusTitleById(int statusId)
             => this.data.HolidayRequestStatuses.Find(statusId)?.Title;
 
         public int GetPendingStatusId()
             => this.data.HolidayRequestStatuses
-                    .First(s => s.Title == RequestStatusEnum.Pending.ToString())
+                    .FirstOrDefault(s => s.Title == RequestStatusEnum.Pending.ToString())!
                     .Id;
+
         public int GetApprovedStatusId()
             => this.data.HolidayRequestStatuses
-                    .First(s => s.Title == RequestStatusEnum.Approved.ToString())
+                    .FirstOrDefault(s => s.Title == RequestStatusEnum.Approved.ToString())!
                     .Id;
 
         public int GetDisapprovedStatusId()
             => this.data.HolidayRequestStatuses
-                    .First(s => s.Title == RequestStatusEnum.Disapproved.ToString())
+                    .FirstOrDefault(s => s.Title == RequestStatusEnum.Disapproved.ToString())!
                     .Id;
     }
 }

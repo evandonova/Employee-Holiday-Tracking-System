@@ -34,7 +34,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                         Id = hr.Id,
                         StartDate = hr.StartDate.ToString("d MMMM yyyy"),
                         EndDate = hr.EndDate.ToString("d MMMM yyyy"),
-                        Status = statuses.GetTitleById(hr.StatusId) ?? "Pending"
+                        Status = statuses.GetStatusTitleById(hr.StatusId) ?? "Pending"
                     })
                     .ToList();
 

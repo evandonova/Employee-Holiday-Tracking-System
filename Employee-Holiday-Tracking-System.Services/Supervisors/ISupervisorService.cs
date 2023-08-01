@@ -4,6 +4,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Supervisors
 {
     public interface ISupervisorService
     {
-        public Supervisor GetSupervisor(string? userId);
+        public Supervisor GetSupervisorByUserId(string? userId);
     }
 }

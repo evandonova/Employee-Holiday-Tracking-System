@@ -15,10 +15,10 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             this.statuses = statuses;
         }
 
-        public HolidayRequest? GetById(Guid id)
+        public HolidayRequest? GetRequestById(Guid id)
             => this.data.HolidayRequests.Find(id);
 
-        public bool Exists(Guid id)
+        public bool RequestExists(Guid id)
             => this.data.HolidayRequests.Find(id) is not null;
 
         public void Create(DateTime startDate, DateTime endDate, Guid employeeId, Guid supervisorId)
@@ -27,7 +27,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             {
                 StartDate = startDate,
                 EndDate = endDate,
-                StatusId = statuses.GetPendingStatusId(),
+                StatusId = this.statuses.GetPendingStatusId(),
                 EmployeeId = employeeId,
                 SupervisorId = supervisorId,
             };
@@ -36,17 +36,28 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             data.SaveChanges();
         }
 
-        public void ChangeRequestStatusToApproved(Guid requestId)
+        public void UpdateRequestToApproved(Guid requestId)
         {
-            var request = this.GetById(requestId);
-            request.StatusId = this.statuses.GetApprovedStatusId();
+            var request = this.GetRequestById(requestId);
 
+            if(request is null) 
+            {
+                return;
+            }
+
+            request.StatusId = this.statuses.GetApprovedStatusId();
             data.SaveChanges();
         }
 
         public void UpdateDisapprovedRequest(Guid requestId, string statement)
         {
-            var request = this.GetById(requestId);
+            var request = this.GetRequestById(requestId);
+
+            if (request is null)
+            {
+                return;
+            }
+
             request.StatusId = this.statuses.GetDisapprovedStatusId();
             request.DisapprovalStatement = statement;
 

@@ -2,7 +2,7 @@
 {
     public interface IRequestStatusService
     {
-        public string? GetTitleById(int statusId);
+        public string? GetStatusTitleById(int statusId);
 
         public int GetPendingStatusId();
 

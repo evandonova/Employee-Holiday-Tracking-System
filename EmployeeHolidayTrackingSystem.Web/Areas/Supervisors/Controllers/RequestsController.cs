@@ -28,7 +28,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
 
         public IActionResult Respond(Guid id)
         {
-            var request = this.requests.GetById(id);
+            var request = this.requests.GetRequestById(id);
 
             if(request == null)
             {
@@ -44,7 +44,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 {
                     Id = request.EmployeeId,
                     FullName = this.employees.GetEmployeeFullName(request.EmployeeId),
-                    HolidayDaysRemaining = this.employees.GetEmployeeHolidayDaysRemaining(request.EmployeeId)
+                    HolidayDaysRemaining = this.employees.GetEmployeeHolidayDaysRemaining(request.EmployeeId) ?? 0
                 }
             };
 
@@ -54,7 +54,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         [HttpPost]
         public IActionResult Respond(PendingRequestDetailsViewModel model, bool IsApproved)
         {
-            var request = this.requests.GetById(model.Id);
+            var request = this.requests.GetRequestById(model.Id);
 
             if (request == null)
             {
@@ -79,7 +79,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View(model);
             }
 
-            this.requests.ChangeRequestStatusToApproved(request.Id);
+            this.requests.UpdateRequestToApproved(request.Id);
 
             this.employees.SubtractEmployeeHolidayDays(request.EmployeeId, holidayDaysCount);
 
@@ -105,7 +105,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View(model);
             }
 
-            var request = this.requests.GetById(model.RequestId);
+            var request = this.requests.GetRequestById(model.RequestId);
 
             if (request == null)
             {
