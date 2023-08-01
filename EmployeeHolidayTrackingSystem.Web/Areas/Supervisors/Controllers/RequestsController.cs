@@ -1,0 +1,120 @@
+﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
+using EmployeeHolidayTrackingSystem.Services.Requests;
+using EmployeeHolidayTrackingSystem.Services.Employees;
+using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
+using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models;
+
+using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
+
+namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
+{
+    [Area(SupervisorsAreaName)]
+    [Authorize(Roles = SupervisorRoleName)]
+    public class RequestsController : Controller
+    {
+        private readonly IRequestService requests;
+        private readonly IEmployeeService employees;
+        private readonly IRequestStatusService statuses;
+
+        public RequestsController(IRequestService requests, 
+            IEmployeeService employees, IRequestStatusService statuses)
+        {
+            this.requests = requests;
+            this.employees = employees;
+            this.statuses = statuses;
+        }
+
+        public IActionResult Respond(Guid id)
+        {
+            var request = this.requests.GetById(id);
+
+            if(request == null)
+            {
+                return BadRequest();
+            }
+
+            var model = new PendingExtendedRequestViewModel()
+            {
+                Id = request.Id,
+                StartDate = request.StartDate.ToString("d MMMM yyyy"),
+                EndDate = request.EndDate.ToString("d MMMM yyyy"),
+                Status = this.statuses.GetTitleById(request.StatusId) ?? "Pending",
+                Employee = new EmployeeExtendedViewModel()
+                {
+                    Id = request.EmployeeId,
+                    FullName = this.employees.GetEmployeeFullName(request.EmployeeId),
+                    HolidayDaysRemaining = this.employees.GetEmployeeHolidayDaysRemaining(request.EmployeeId)
+                }
+            };
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Respond(PendingExtendedRequestViewModel model, bool IsApproved)
+        {
+            var request = this.requests.GetById(model.Id);
+
+            if (request == null)
+            {
+                return BadRequest();
+            }
+
+            if (!IsApproved) 
+            { 
+                return RedirectToAction(nameof(RequestsController.Disapprove), "Requests", new { id = model.Id });
+            }
+
+            var startDate = DateTime.Parse(model.StartDate);
+            var endDate = DateTime.Parse(model.EndDate);
+
+            var holidayDaySpan = endDate.Subtract(startDate);
+            var holidayDaysCount = holidayDaySpan.Days + 1;
+
+            // If employee requests more days than they have remaining
+            if (!this.employees.CheckIfEmployeeHasEnoughHolidayDays(request.EmployeeId, holidayDaysCount))
+            {
+                TempData["message"] = "The Employee has less holiday days remaining than requested. You cannot approve their request.";
+                return View(model);
+            }
+
+            this.requests.ChangeRequestStatusToApproved(request.Id);
+
+            this.employees.SubtractEmployeeHolidayDays(request.EmployeeId, holidayDaysCount);
+
+            return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+
+        public IActionResult Disapprove(Guid id)
+        {
+            var model = new DisapprovedRequestFormModel()
+            {
+                RequestId = id,
+                Statement = string.Empty
+            }; 
+
+            return View(model);
+        }
+
+        [HttpPost]
+        public IActionResult Disapprove(DisapprovedRequestFormModel model)
+        {
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var request = this.requests.GetById(model.RequestId);
+
+            if (request == null)
+            {
+                return BadRequest();
+            }
+
+            this.requests.UpdateDisapprovedRequest(model.RequestId, model.Statement);
+
+            return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
+    }
+}

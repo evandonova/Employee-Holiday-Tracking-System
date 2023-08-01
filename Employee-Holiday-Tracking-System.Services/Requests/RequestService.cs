@@ -18,6 +18,9 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
         public HolidayRequest? GetById(Guid id)
             => this.data.HolidayRequests.Find(id);
 
+        public bool Exists(Guid id)
+            => this.data.HolidayRequests.Find(id) is not null;
+
         public void Create(DateTime startDate, DateTime endDate, Guid employeeId, Guid supervisorId)
         {
             var request = new HolidayRequest()
@@ -33,5 +36,21 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             data.SaveChanges();
         }
 
+        public void ChangeRequestStatusToApproved(Guid requestId)
+        {
+            var request = this.GetById(requestId);
+            request.StatusId = this.statuses.GetApprovedStatusId();
+
+            data.SaveChanges();
+        }
+
+        public void UpdateDisapprovedRequest(Guid requestId, string statement)
+        {
+            var request = this.GetById(requestId);
+            request.StatusId = this.statuses.GetDisapprovedStatusId();
+            request.DisapprovalStatement = statement;
+
+            data.SaveChanges();
+        }
     }
 }

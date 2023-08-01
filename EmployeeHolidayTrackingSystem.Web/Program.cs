@@ -6,6 +6,7 @@ using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
+using EmployeeHolidayTrackingSystem.Services.Supervisors;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,8 +33,9 @@ builder.Services
 
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddTransient<IEmployeeService, EmployeeService>();
 builder.Services.AddTransient<IRequestService, RequestService>();
+builder.Services.AddTransient<IEmployeeService, EmployeeService>();
+builder.Services.AddTransient<ISupervisorService, SupervisorService>();
 builder.Services.AddTransient<IRequestStatusService, RequestStatusService>();
 
 var app = builder.Build();

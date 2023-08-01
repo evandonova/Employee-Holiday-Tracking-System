@@ -73,7 +73,12 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                     "End date should be after start date.");
             }
 
-            var currentEmployee = employees.GetEmployee(this.User.Id());
+            if (!ModelState.IsValid)
+            {
+                return View(requestModel);
+            }
+
+            var currentEmployee = employees.GetEmployeeByUserId(this.User.Id());
 
             var holidayDaySpan = endDate.Subtract(startDate);
             var holidayDaysCount = holidayDaySpan.Days + 1;
@@ -81,12 +86,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
             // If employee requests more days than they have remaining
             if (holidayDaysCount > currentEmployee.HolidayDaysRemaining)
             {
-                ModelState.AddModelError(nameof(requestModel.EndDate),
-                    "You don't have enough holiday days remaining.");
-            }
-
-            if (!ModelState.IsValid)
-            {
+                TempData["message"] = "You try to request more holiday days than you have remaining.";
                 return View(requestModel);
             }
 

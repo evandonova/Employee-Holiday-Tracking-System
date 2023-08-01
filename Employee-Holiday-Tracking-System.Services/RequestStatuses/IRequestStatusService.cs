@@ -5,5 +5,9 @@
         public string? GetTitleById(int statusId);
 
         public int GetPendingStatusId();
+
+        public int GetApprovedStatusId();
+
+        public int GetDisapprovedStatusId();
     }
 }

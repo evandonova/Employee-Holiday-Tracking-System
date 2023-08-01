@@ -5,6 +5,7 @@ using EmployeeHolidayTrackingSystem.Data.Models;
 
 using static EmployeeHolidayTrackingSystem.Web.Constants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
+using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
 {

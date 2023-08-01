@@ -2,7 +2,7 @@
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models
 {
-    public class EmployeeViewModel
+    public class EmployeeProfileViewModel
     {
         public string FullName { get; init; } = null!;
 

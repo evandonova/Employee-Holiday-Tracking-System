@@ -1,7 +1,7 @@
-﻿@model RequestFormModel
+﻿@model PendingExtendedRequestViewModel
 
 @{
-    ViewData["Title"] = "Create Request Page";
+    ViewData["Title"] = "Respond to Request";
 }
 
 @if (TempData["message"] != null)
@@ -13,22 +13,35 @@
 
 <div class="row">
     <div class="col-3" style="width: 25%">
-
-        <h4>Request a holiday</h4>
-        <p>Choose start and end days from the calendar on the right.</p>
-
         <form method="post">
+            <h4>Holiday Request Details</h4>
+
             <label asp-for="StartDate"></label>
-            <input id="startDay" asp-for="StartDate" class="form-control col-1" readonly>
-            <span asp-validation-for="StartDate" class="small text-danger"></span>
+            <input id="startDayFixed" asp-for="StartDate" class="form-control col-1" readonly>
 
             <label asp-for="EndDate"></label>
-            <input id="endDay" asp-for="EndDate" class="form-control col-1" readonly>
-            <span asp-validation-for="EndDate" class="small text-danger"></span>
+            <input id="endDayFixed" asp-for="EndDate" class="form-control col-1" readonly>
 
-            <button id="clearBtn" type="button" class="btn btn-primary mt-3">Clear</button>
-            <input class="btn btn-success mt-3" type="submit" value="Request" />
+            <label asp-for="Employee.FullName"></label>
+            <input asp-for="Employee.FullName" class="form-control col-1" readonly>
+
+            <label asp-for="Employee.HolidayDaysRemaining"></label>
+            <input asp-for="Employee.HolidayDaysRemaining" class="form-control col-1" readonly>
+
+            <input class="btn btn-primary" type="submit" asp-route-isApproved=true value="Approve" />
+            <input class="btn btn-primary" type="submit" asp-route-isApproved=false value="Disapprove" />
+
+        </form>@*
+
+        <form asp-area="Supervisors" asp-controller="Requests" asp-action="Approve"
+              asp-route-id="@Model.Id" method="post" class="mb-2">
+            
         </form>
+
+        <form asp-area="Supervisors" asp-controller="Requests" asp-action="Disapprove"
+              asp-route-id="@Model.Id" method="post">
+            <input class="btn btn-primary" type="submit" value="Disapprove" />
+        </form>*@
     </div>
 
     <div class="content-wrapper lighten-3 col-8">
@@ -48,7 +61,6 @@
                             <h3 id="month-name">July</h3>
                             <h5 id="todayDayName">Today is Monday 31 July</h5>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -79,7 +91,8 @@
 @section Scripts {
     <script type="text/javascript">
         var dateToday = new Date();
-        createCalendar(dateToday);
+        var startDate = document.getElementById("startDayFixed").value;
+        var endDate = document.getElementById("endDayFixed").value;
+        createCalendar(dateToday, null, startDate, endDate);
     </script>
 }
-

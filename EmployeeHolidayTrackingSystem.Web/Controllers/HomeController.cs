@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using EmployeeHolidayTrackingSystem.Web.Models;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
+using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Controllers
 {
@@ -13,6 +14,11 @@ namespace EmployeeHolidayTrackingSystem.Web.Controllers
             if (this.User.IsInRole(EmployeeRoleName))
             {
                 return RedirectToAction("Index", "Home", new { area = EmployeesAreaName });
+            }
+
+            if (this.User.IsInRole(SupervisorRoleName))
+            {
+                return RedirectToAction("Index", "Home", new { area = SupervisorsAreaName });
             }
 
             return View();

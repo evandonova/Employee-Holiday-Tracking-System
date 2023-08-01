@@ -26,7 +26,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
         public IActionResult Index()
         {
-            var employee = employees.GetEmployee(this.User.Id());
+            var employee = employees.GetEmployeeByUserId(this.User.Id());
 
             var holidayRequests = employee.HolidayRequests
                     .Select(hr => new RequestViewModel
@@ -40,7 +40,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
             var supervisor = employee.Supervisor;
 
-            var employeeModel = new EmployeeViewModel()
+            var employeeModel = new EmployeeProfileViewModel()
             {
                 FullName = $"{employee.User.FirstName} {employee.User.LastName}",
                 SupervisorName = $"{supervisor.User.FirstName} {supervisor.User.LastName}",

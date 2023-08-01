@@ -17,5 +17,14 @@ namespace EmployeeHolidayTrackingSystem.Services.RequestStatuses
             => this.data.HolidayRequestStatuses
                     .First(s => s.Title == RequestStatusEnum.Pending.ToString())
                     .Id;
+        public int GetApprovedStatusId()
+            => this.data.HolidayRequestStatuses
+                    .First(s => s.Title == RequestStatusEnum.Approved.ToString())
+                    .Id;
+
+        public int GetDisapprovedStatusId()
+            => this.data.HolidayRequestStatuses
+                    .First(s => s.Title == RequestStatusEnum.Disapproved.ToString())
+                    .Id;
     }
 }

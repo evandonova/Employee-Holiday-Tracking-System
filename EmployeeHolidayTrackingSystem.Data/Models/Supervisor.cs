@@ -14,6 +14,6 @@ namespace EmployeeHolidayTrackingSystem.Data.Models
 
         public IEnumerable<Employee> Employees { get; set; } = new List<Employee>();
 
-        public IEnumerable<HolidayRequest> PendingHolidayRequests { get; set; } = new List<HolidayRequest>();
+        public IEnumerable<HolidayRequest> HolidayRequests { get; set; } = new List<HolidayRequest>();
     }
 }

@@ -1,0 +1,15 @@
+﻿@model DisapprovedRequestFormModel
+
+@{
+    ViewData["Title"] = "Disapprove Request";
+}
+
+<form method="post">
+    <input asp-for="RequestId" type="hidden">
+
+    <label asp-for="Statement"></label>
+    <input asp-for="Statement" class="form-control col-1">
+    <span asp-validation-for="Statement" class="small text-danger"></span>
+
+    <input class="btn btn-success mt-3" type="submit" value="Submit" />
+</form>

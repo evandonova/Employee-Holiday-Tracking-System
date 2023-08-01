@@ -50,7 +50,7 @@ namespace EmployeeHolidayTrackingSystem.Data
             builder
                 .Entity<HolidayRequest>()
                 .HasOne(h => h.Supervisor)
-                .WithMany(s => s.PendingHolidayRequests)
+                .WithMany(s => s.HolidayRequests)
                 .HasForeignKey(h => h.SupervisorId)
                 .OnDelete(DeleteBehavior.Restrict);
 

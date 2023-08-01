@@ -16,6 +16,7 @@
         public class HolidayRequest
         {
             public const int DisapprovalStatementMaxLength = 500;
+            public const int DisapprovalStatementMinLength = 20;
         }
 
         public class HolidayRequestStatus
