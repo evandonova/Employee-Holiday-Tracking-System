@@ -1,27 +1,24 @@
-﻿@model HolidayRequestFormModel
+﻿@model HolidayRequestViewModel
 
 @{
-    ViewData["Title"] = "Create Request Page";
+    ViewData["Title"] = "View Request Details";
 }
 
 <div class="row">
     <div class="col-3" style="width: 25%">
 
-        <h4>Request a holiday</h4>
-        <p>Choose start and end days from the calendar on the right.</p>
+        <h4>Holiday Request Details</h4>
 
-        <form method="post">
-            <label asp-for="StartDate"></label>
-            <input id="startDay" asp-for="StartDate" class="form-control col-1" readonly>
-            <span asp-validation-for="StartDate" class="small text-danger"></span>
+        <label asp-for="StartDate"></label>
+        <input id="startDayFixed" asp-for="StartDate" class="form-control col-1" readonly>
+        <span asp-validation-for="StartDate" class="small text-danger"></span>
 
-            <label asp-for="EndDate"></label>
-            <input id="endDay" asp-for="EndDate" class="form-control col-1" readonly>
-            <span asp-validation-for="EndDate" class="small text-danger"></span>
+        <label asp-for="EndDate"></label>
+        <input id="endDayFixed" asp-for="EndDate" class="form-control col-1" readonly>
+        <span asp-validation-for="EndDate" class="small text-danger"></span>
 
-            <button id="clearBtn" type="button" class="btn btn-primary mt-3">Clear</button>
-            <input class="btn btn-success mt-3" type="submit" value="Request" />
-        </form>
+        <label asp-for="Status"></label>
+        <input asp-for="Status" class="form-control col-1" readonly>
     </div>
 
     <div class="content-wrapper lighten-3 col-8">
@@ -41,7 +38,6 @@
                             <h3 id="month-name">July</h3>
                             <h5 id="todayDayName">Today is Monday 31 July</h5>
                         </div>
-
                     </div>
                 </div>
             </div>
@@ -68,3 +64,12 @@
     </div>
 </div>
 
+<script src="~/js/site.js" asp-append-version="true"></script>
+@section Scripts {
+    <script type="text/javascript">
+        var dateToday = new Date();
+        var startDate = document.getElementById("startDayFixed").value;
+        var endDate = document.getElementById("endDayFixed").value;
+        createCalendar(dateToday, null, startDate, endDate);
+    </script>
+}

@@ -12,15 +12,23 @@ var secondSelectedDate = null;
 
 var count = 0;
 
-createCalendar(currentDate);
-
 var prevButton = document.getElementById("prev");
 var nextButton = document.getElementById("next");
 
 var clearBtn = document.getElementById("clearBtn");
 
-function createCalendar(date, side) {
+function createCalendar(date, side, startDateAsText, endDateAsText) {
+
     currentDate = date;
+
+    if (startDateAsText != null && endDateAsText != null) {
+        var startDate = new Date(startDateAsText);
+        firstSelectedDate = startDate;
+        currentDate = startDate;
+
+        var endDate = new Date(endDateAsText);
+        secondSelectedDate = endDate;
+    }
 
     var monthTitle = document.getElementById("month-name");
     monthTitle.innerHTML = getMonthTitle();

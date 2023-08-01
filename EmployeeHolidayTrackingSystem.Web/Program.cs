@@ -54,9 +54,9 @@ app.UseAuthorization();
 app.UseEndpoints(endpoints =>
 {
     endpoints.MapRedirect("/Identity/Account/Register", "/Identity/Account/Login");
+    endpoints.MapDefaultAreaRoute();
+    endpoints.MapDefaultControllerRoute();
+    endpoints.MapRazorPages();
 });
-
-app.MapDefaultControllerRoute();
-app.MapRazorPages();
 
 app.Run();

@@ -1,0 +1,38 @@
+﻿@model EmployeeViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="card">
+    <h5 class="card-header">My User Info</h5>
+    <div class="card-body">
+        <h5 class="card-title mb-3 fw-bold">@Model.FullName</h5>
+        <p class="card-text mb-0">Holiday Days Remaining: @Model.HolidayDaysRemaining</p>
+        <p class="card-text">Supervisor: @Model.SupervisorName</p>
+    </div>
+</div>
+
+<div class="card">
+    <h5 class="card-header">Holiday Requests</h5>
+    <div class="card-body table-responsive scrollable">
+        <a asp-area="Employees" asp-controller="HolidayRequests" asp-action="Create"
+           class="btn btn-primary mb-3">Create New Request</a>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Start Date</th>
+                    <th scope="col">End Date</th>
+                    <th scope="col">Status</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @await Html.PartialAsync("_RequestPartial.cshtml", Model.ApprovedHolidayRequests.ToList(), new ViewDataDictionary(ViewData) { {"class", "table-success"} } )
+                @await Html.PartialAsync("_RequestPartial.cshtml", Model.PendingHolidayRequests.ToList(), new ViewDataDictionary(ViewData) { {"class", "table-warning"} } )
+                @await Html.PartialAsync("_RequestPartial.cshtml", Model.DisapprovedHolidayRequests.ToList(), new ViewDataDictionary(ViewData) { {"class", "table-dark"} } )
+            </tbody>
+        </table>
+    </div>
+</div>

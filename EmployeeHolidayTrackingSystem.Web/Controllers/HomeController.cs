@@ -2,12 +2,19 @@
 using Microsoft.AspNetCore.Mvc;
 using EmployeeHolidayTrackingSystem.Web.Models;
 
+using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
+
 namespace EmployeeHolidayTrackingSystem.Web.Controllers
 {
     public class HomeController : Controller
     {
         public IActionResult Index()
         {
+            if (this.User.IsInRole(EmployeeRoleName))
+            {
+                return RedirectToAction("Index", "Home", new { area = EmployeesAreaName });
+            }
+
             return View();
         }
 

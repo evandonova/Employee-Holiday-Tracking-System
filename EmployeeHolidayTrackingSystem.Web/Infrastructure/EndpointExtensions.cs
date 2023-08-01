@@ -1,4 +1,6 @@
-﻿namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
+﻿using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
+
+namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
 {
     public static class EndpointExtensions
     {
@@ -8,6 +10,13 @@
             endpoints.MapGet(sourcePath, context => 
                     Task.Factory.StartNew(() 
                         => context.Response.Redirect(destinationPath, true, true)));
+        }
+
+        public static void MapDefaultAreaRoute(this IEndpointRouteBuilder endpoints)
+        {
+            endpoints.MapControllerRoute(
+                name: EmployeesAreaName,
+                pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
         }
     }
 }

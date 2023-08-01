@@ -4,6 +4,7 @@ using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 
 using static EmployeeHolidayTrackingSystem.Web.Constants;
+using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
 {
