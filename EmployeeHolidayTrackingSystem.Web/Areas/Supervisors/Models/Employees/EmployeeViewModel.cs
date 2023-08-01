@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models
+namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees
 {
     public class EmployeeViewModel
     {

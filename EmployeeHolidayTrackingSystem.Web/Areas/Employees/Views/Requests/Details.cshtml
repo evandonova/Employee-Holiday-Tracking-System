@@ -1,4 +1,4 @@
-﻿@model RequestViewModel
+﻿@model EmployeeRequestViewModel
 
 @{
     ViewData["Title"] = "View Request Details";
@@ -17,6 +17,12 @@
 
         <label asp-for="Status"></label>
         <input asp-for="Status" class="form-control col-1" readonly>
+
+        @if (!String.IsNullOrEmpty(Model.DisapprovalStatement))
+        {
+            <label asp-for="DisapprovalStatement"></label>
+            <input asp-for="DisapprovalStatement" class="form-control col-1" readonly>
+        }
     </div>
 
     <div class="content-wrapper lighten-3 col-8">

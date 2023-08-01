@@ -2,7 +2,7 @@
 
 using static EmployeeHolidayTrackingSystem.Data.DataConstants.HolidayRequest;
 
-namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models
+namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests
 {
     public class DisapprovedRequestFormModel
     {

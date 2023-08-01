@@ -3,7 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
-using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models;
+using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests;
+using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 
@@ -34,12 +35,11 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return BadRequest();
             }
 
-            var model = new PendingExtendedRequestViewModel()
+            var model = new PendingRequestDetailsViewModel()
             {
                 Id = request.Id,
                 StartDate = request.StartDate.ToString("d MMMM yyyy"),
                 EndDate = request.EndDate.ToString("d MMMM yyyy"),
-                Status = this.statuses.GetTitleById(request.StatusId) ?? "Pending",
                 Employee = new EmployeeExtendedViewModel()
                 {
                     Id = request.EmployeeId,
@@ -52,7 +52,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         }
 
         [HttpPost]
-        public IActionResult Respond(PendingExtendedRequestViewModel model, bool IsApproved)
+        public IActionResult Respond(PendingRequestDetailsViewModel model, bool IsApproved)
         {
             var request = this.requests.GetById(model.Id);
 

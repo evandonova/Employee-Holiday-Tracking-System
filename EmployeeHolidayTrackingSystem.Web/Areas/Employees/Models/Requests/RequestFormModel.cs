@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EmployeeHolidayTrackingSystem.Web.Models.Requests
+namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests
 {
     public class RequestFormModel
     {

@@ -1,12 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
-using EmployeeHolidayTrackingSystem.Web.Models.Requests;
+using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
+using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 {
@@ -37,11 +38,12 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
             var requestStatusTitle = this.statuses.GetTitleById(request.StatusId);
 
-            var model = new RequestViewModel()
+            var model = new EmployeeRequestViewModel()
             {
                 StartDate = request.StartDate.ToString("d MMMM yyyy"),
                 EndDate = request.EndDate.ToString("d MMMM yyyy"),
-                Status = requestStatusTitle ?? "Pending" 
+                Status = requestStatusTitle ?? "Pending",
+                DisapprovalStatement = request.DisapprovalStatement
             };
 
             return View(model);

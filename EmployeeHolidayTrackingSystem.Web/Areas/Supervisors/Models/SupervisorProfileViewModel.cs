@@ -1,4 +1,7 @@
-﻿namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models
+﻿using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
+using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests;
+
+namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models
 {
     public class SupervisorProfileViewModel
     {

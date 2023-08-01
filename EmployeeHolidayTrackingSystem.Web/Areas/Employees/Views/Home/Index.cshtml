@@ -31,7 +31,7 @@
             <tbody>
                 @await Html.PartialAsync("_RequestPartial.cshtml", Model.ApprovedHolidayRequests.ToList(), new ViewDataDictionary(ViewData) { {"class", "table-success"} } )
                 @await Html.PartialAsync("_RequestPartial.cshtml", Model.PendingHolidayRequests.ToList(), new ViewDataDictionary(ViewData) { {"class", "table-warning"} } )
-                @await Html.PartialAsync("_RequestPartial.cshtml", Model.DisapprovedHolidayRequests.ToList(), new ViewDataDictionary(ViewData) { {"class", "table-dark"} } )
+                @await Html.PartialAsync("_RequestPartial.cshtml", Model.DisapprovedHolidayRequests.ToList(), new ViewDataDictionary(ViewData) { {"class", "table-secondary"} } )
             </tbody>
         </table>
     </div>

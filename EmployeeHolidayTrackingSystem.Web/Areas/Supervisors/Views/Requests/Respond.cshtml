@@ -1,4 +1,4 @@
-﻿@model PendingExtendedRequestViewModel
+﻿@model PendingRequestDetailsViewModel
 
 @{
     ViewData["Title"] = "Respond to Request";
@@ -30,18 +30,7 @@
 
             <input class="btn btn-primary" type="submit" asp-route-isApproved=true value="Approve" />
             <input class="btn btn-primary" type="submit" asp-route-isApproved=false value="Disapprove" />
-
-        </form>@*
-
-        <form asp-area="Supervisors" asp-controller="Requests" asp-action="Approve"
-              asp-route-id="@Model.Id" method="post" class="mb-2">
-            
         </form>
-
-        <form asp-area="Supervisors" asp-controller="Requests" asp-action="Disapprove"
-              asp-route-id="@Model.Id" method="post">
-            <input class="btn btn-primary" type="submit" value="Disapprove" />
-        </form>*@
     </div>
 
     <div class="content-wrapper lighten-3 col-8">

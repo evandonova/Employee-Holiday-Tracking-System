@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
-using EmployeeHolidayTrackingSystem.Web.Models.Requests;
 using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models;
+using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
