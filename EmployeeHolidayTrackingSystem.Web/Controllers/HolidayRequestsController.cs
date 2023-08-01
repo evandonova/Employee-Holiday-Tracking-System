@@ -68,7 +68,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Controllers
 
             this.data.HolidayRequests.Add(request);
 
-            currentEmployee.HolidayDaysRemaining -= holidayDaysCount;
+            //currentEmployee.HolidayDaysRemaining -= holidayDaysCount;
 
             this.data.SaveChanges();
 

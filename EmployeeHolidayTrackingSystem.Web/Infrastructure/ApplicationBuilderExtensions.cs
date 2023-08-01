@@ -42,7 +42,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
 
             SeedAdminRoleAndUser(userManager, roleManager);
             SeedSupervisorRoleAndUser(userManager, roleManager);
-            SeedEmployeeUser(userManager);
+            SeedEmployeeRoleAndUser(userManager, roleManager);
 
             SeedSupervisor(dbContext);
             SeedEmployee(dbContext);
@@ -146,22 +146,33 @@ namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
                 .GetResult();
         }
 
-        private static void SeedEmployeeUser(UserManager<User> userManager)
+        private static void SeedEmployeeRoleAndUser(UserManager<User> userManager,
+            RoleManager<IdentityRole> roleManager)
         {
-            employeeUser = new User()
-            {
-                UserName = "employee@mail.com",
-                NormalizedUserName = "EMPLOYEE@MAIL.COM",
-                Email = "employee@mail.com",
-                NormalizedEmail = "EMPLOYEE@MAIL.COM",
-                FirstName = "Employee",
-                LastName = "Andersen"
-            };
-
             Task
                 .Run(async () =>
                 {
+                    if (await roleManager.RoleExistsAsync(EmployeeRoleName))
+                    {
+                        return;
+                    }
+
+                    var role = new IdentityRole { Name = EmployeeRoleName };
+
+                    await roleManager.CreateAsync(role);
+
+                    employeeUser = new User()
+                    {
+                        UserName = "employee@mail.com",
+                        NormalizedUserName = "EMPLOYEE@MAIL.COM",
+                        Email = "employee@mail.com",
+                        NormalizedEmail = "EMPLOYEE@MAIL.COM",
+                        FirstName = "Employee",
+                        LastName = "Andersen"
+                    };
+
                     await userManager.CreateAsync(employeeUser, "employee123#");
+                    await userManager.AddToRoleAsync(employeeUser, role.Name);
                 })
                 .GetAwaiter()
                 .GetResult();
