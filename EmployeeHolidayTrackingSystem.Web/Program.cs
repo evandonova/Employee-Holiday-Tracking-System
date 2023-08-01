@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
+using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
@@ -33,6 +34,7 @@ builder.Services
 
 builder.Services.AddControllersWithViews();
 
+builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRequestService, RequestService>();
 builder.Services.AddTransient<IEmployeeService, EmployeeService>();
 builder.Services.AddTransient<ISupervisorService, SupervisorService>();

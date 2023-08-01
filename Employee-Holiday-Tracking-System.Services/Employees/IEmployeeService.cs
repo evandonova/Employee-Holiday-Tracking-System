@@ -15,5 +15,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
         public bool CheckIfEmployeeHasEnoughHolidayDays(Guid id, int days);
 
         public void SubtractEmployeeHolidayDays(Guid id, int days);
+
+        public void EditEmployee(Guid id, string firstName, string lastName, string newPassword);
     }
 }

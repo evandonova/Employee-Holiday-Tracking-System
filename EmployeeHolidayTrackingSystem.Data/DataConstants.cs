@@ -5,7 +5,13 @@
         public class User
         {
             public const int FirstNameMaxLength = 20;
+            public const int FirstNameMinLength = 2;
+
             public const int LastNameMaxLength = 30;
+            public const int LastNameMinLength = 3;
+
+            public const int PasswordMaxLength = 30;
+            public const int PasswordMinLength = 6;
         }
 
         public class Employee

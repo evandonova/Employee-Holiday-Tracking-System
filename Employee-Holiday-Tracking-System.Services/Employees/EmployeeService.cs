@@ -1,15 +1,20 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
+using EmployeeHolidayTrackingSystem.Services.Users;
 
 namespace EmployeeHolidayTrackingSystem.Services.Employees
 {
     public class EmployeeService : IEmployeeService
     {
         private readonly EmployeeHolidayDbContext data;
+        private readonly IUserService users;
 
-        public EmployeeService(EmployeeHolidayDbContext data)
-            => this.data = data;
+        public EmployeeService(EmployeeHolidayDbContext data, IUserService users)
+        {
+            this.data = data;
+            this.users = users;
+        }
 
         public Employee? GetEmployeeByUserId(string? userId)
             => this.data.Employees
@@ -20,7 +25,8 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
 
         public Employee? GetEmployeeById(Guid id)
             => this.data.Employees
-                    .Find(id);
+                    .Include(e => e.User)
+                    .FirstOrDefault(e => e.Id == id);
 
         public string GetEmployeeFullName(Guid id)
         {
@@ -47,6 +53,26 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             }
 
             employee.HolidayDaysRemaining -= days;
+            this.data.SaveChanges();
+        }
+
+        public void EditEmployee(Guid id, string firstName, string lastName, string newPassword)
+        {
+            var employee = this.data.Employees.Find(id);
+    
+            if(employee is null)
+            {
+                return;
+            }
+
+            employee.User.FirstName = firstName;
+            employee.User.LastName = lastName;
+
+            if(newPassword is not null) 
+            {
+                users.UpdatePassword(employee.UserId, newPassword);
+            }
+
             this.data.SaveChanges();
         }
     }

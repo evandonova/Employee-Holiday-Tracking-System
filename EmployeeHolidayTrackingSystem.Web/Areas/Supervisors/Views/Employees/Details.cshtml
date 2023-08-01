@@ -1,0 +1,30 @@
+﻿@model EmployeeDetailsFormModel
+
+@{
+    ViewData["Title"] = "View Employee";
+}
+
+<form method="post">
+    <h4>Employee Details</h4>
+
+    <input asp-for="Id" type="hidden">
+
+    <label asp-for="FirstName"></label>
+    <input asp-for="FirstName" class="form-control col-1">
+    <span asp-validation-for="FirstName" class="small text-danger"></span>
+
+    <label asp-for="LastName"></label>
+    <input asp-for="LastName" class="form-control col-1">
+    <span asp-validation-for="LastName" class="small text-danger"></span>
+
+    <label asp-for="HolidayDaysRemaining"></label>
+    <input asp-for="HolidayDaysRemaining" class="form-control col-1" readonly>
+
+    <label>Change Password</label>
+    <input asp-for="NewPassword" class="form-control col-1" placeholder="New Password">
+    <span asp-validation-for="NewPassword" class="small text-danger"></span>
+
+    <input asp-area="Supervisors" asp-controller="Employees" asp-action="Edit" class="btn btn-primary" type="submit" value="Edit Employee" />
+    <input asp-area="Supervisors" asp-controller="Employees" asp-action="Delete" class="btn btn-primary" type="submit" value="Delete Employee" />
+</form>
+
