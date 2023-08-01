@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Identity;
 using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
+using EmployeeHolidayTrackingSystem.Services.Employees;
+using EmployeeHolidayTrackingSystem.Services.Requests;
+using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,7 +29,12 @@ builder.Services
     })
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EmployeeHolidayDbContext>();
+
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddTransient<IEmployeeService, EmployeeService>();
+builder.Services.AddTransient<IRequestService, RequestService>();
+builder.Services.AddTransient<IRequestStatusService, RequestStatusService>();
 
 var app = builder.Build();
 

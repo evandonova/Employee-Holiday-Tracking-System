@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EmployeeHolidayTrackingSystem.Web.Models.HolidayRequests
+namespace EmployeeHolidayTrackingSystem.Web.Models.Requests
 {
-    public class HolidayRequestViewModel
+    public class RequestViewModel
     {
         public Guid Id { get; init; }
 

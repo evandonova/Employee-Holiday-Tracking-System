@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace EmployeeHolidayTrackingSystem.Web.Models.HolidayRequests
+namespace EmployeeHolidayTrackingSystem.Web.Models.Requests
 {
-    public class HolidayRequestFormModel
+    public class RequestFormModel
     {
         [Display(Name = "Start Date")]
         public string StartDate { get; set; } = null!;

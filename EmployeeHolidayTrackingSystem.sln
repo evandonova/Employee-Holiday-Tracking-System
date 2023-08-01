@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.6.33723.286
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeHolidayTrackingSystem.Web", "EmployeeHolidayTrackingSystem.Web\EmployeeHolidayTrackingSystem.Web.csproj", "{568049BB-391E-4B8F-93EB-EA1531383A8F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeHolidayTrackingSystem.Web", "EmployeeHolidayTrackingSystem.Web\EmployeeHolidayTrackingSystem.Web.csproj", "{568049BB-391E-4B8F-93EB-EA1531383A8F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeHolidayTrackingSystem.Data", "EmployeeHolidayTrackingSystem.Data\EmployeeHolidayTrackingSystem.Data.csproj", "{7DBF335E-5891-42AE-82EC-89366A5CAA98}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeHolidayTrackingSystem.Data", "EmployeeHolidayTrackingSystem.Data\EmployeeHolidayTrackingSystem.Data.csproj", "{7DBF335E-5891-42AE-82EC-89366A5CAA98}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeHolidayTrackingSystem.Services", "Employee-Holiday-Tracking-System.Services\EmployeeHolidayTrackingSystem.Services.csproj", "{295D86B8-AC6E-4ACF-9276-C74E193A93EF}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{7DBF335E-5891-42AE-82EC-89366A5CAA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DBF335E-5891-42AE-82EC-89366A5CAA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DBF335E-5891-42AE-82EC-89366A5CAA98}.Release|Any CPU.Build.0 = Release|Any CPU
+		{295D86B8-AC6E-4ACF-9276-C74E193A93EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{295D86B8-AC6E-4ACF-9276-C74E193A93EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{295D86B8-AC6E-4ACF-9276-C74E193A93EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{295D86B8-AC6E-4ACF-9276-C74E193A93EF}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

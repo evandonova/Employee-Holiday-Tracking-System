@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Data;
-using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
-using EmployeeHolidayTrackingSystem.Web.Models.HolidayRequests;
+using EmployeeHolidayTrackingSystem.Web.Models.Requests;
 using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models;
+using EmployeeHolidayTrackingSystem.Services.Employees;
+using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 
@@ -15,22 +15,26 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
     [Authorize(Roles = EmployeeRoleName)]
     public class HomeController : Controller
     {
-        private readonly EmployeeHolidayDbContext data;
+        private readonly IEmployeeService employees;
+        private readonly IRequestStatusService statuses;
 
-        public HomeController(EmployeeHolidayDbContext data)
-            => this.data = data;
+        public HomeController(IEmployeeService employees, IRequestStatusService statuses)
+        {
+            this.employees = employees;
+            this.statuses = statuses;
+        }
 
         public IActionResult Index()
         {
-            var employee = GetEmployee(this.User.Id());
+            var employee = employees.GetEmployee(this.User.Id());
 
             var holidayRequests = employee.HolidayRequests
-                    .Select(hr => new HolidayRequestViewModel
+                    .Select(hr => new RequestViewModel
                     {
                         Id = hr.Id,
-                        StartDate = hr.StartDate.ToString("dd MMMM yyyy"),
-                        EndDate = hr.EndDate.ToString("dd MMMM yyyy"),
-                        Status = this.data.HolidayRequestStatuses.Find(hr.StatusId).Title
+                        StartDate = hr.StartDate.ToString("d MMMM yyyy"),
+                        EndDate = hr.EndDate.ToString("d MMMM yyyy"),
+                        Status = statuses.GetTitleById(hr.StatusId) ?? "Pending"
                     })
                     .ToList();
 
@@ -42,21 +46,14 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                 SupervisorName = $"{supervisor.User.FirstName} {supervisor.User.LastName}",
                 HolidayDaysRemaining = employee.HolidayDaysRemaining,
                 PendingHolidayRequests = holidayRequests
-                    .Where(h => h.Status == HolidayRequestStatusEnum.Pending.ToString()),
+                    .Where(h => h.Status == RequestStatusEnum.Pending.ToString()),
                 ApprovedHolidayRequests = holidayRequests
-                    .Where(h => h.Status == HolidayRequestStatusEnum.Approved.ToString()),
+                    .Where(h => h.Status == RequestStatusEnum.Approved.ToString()),
                 DisapprovedHolidayRequests = holidayRequests
-                    .Where(h => h.Status == HolidayRequestStatusEnum.Disapproved.ToString()),
+                    .Where(h => h.Status == RequestStatusEnum.Disapproved.ToString()),
             };
 
             return View(employeeModel);
         }
-
-        private Employee GetEmployee(string? userId)
-            => data.Employees
-                    .Include(e => e.User)
-                    .Include(e => e.Supervisor.User)
-                    .Include(e => e.HolidayRequests)
-                    .First(e => e.UserId == userId);
     }
 }

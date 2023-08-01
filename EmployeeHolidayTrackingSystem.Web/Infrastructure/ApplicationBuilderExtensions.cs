@@ -60,15 +60,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
             {
                 new HolidayRequestStatus()
                 {
-                    Title = HolidayRequestStatusEnum.Pending.ToString()
+                    Title = RequestStatusEnum.Pending.ToString()
                 },
                 new HolidayRequestStatus()
                 {
-                    Title = HolidayRequestStatusEnum.Approved.ToString()
+                    Title = RequestStatusEnum.Approved.ToString()
                 },
                 new HolidayRequestStatus()
                 {
-                    Title = HolidayRequestStatusEnum.Disapproved.ToString()
+                    Title = RequestStatusEnum.Disapproved.ToString()
                 }
             };
 

@@ -1,10 +1,10 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using EmployeeHolidayTrackingSystem.Data;
-using EmployeeHolidayTrackingSystem.Data.Models;
-using EmployeeHolidayTrackingSystem.Web.Controllers;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
-using EmployeeHolidayTrackingSystem.Web.Models.HolidayRequests;
+using EmployeeHolidayTrackingSystem.Web.Models.Requests;
+using EmployeeHolidayTrackingSystem.Services.Requests;
+using EmployeeHolidayTrackingSystem.Services.Employees;
+using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 
@@ -12,30 +12,35 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 {
     [Area(EmployeesAreaName)]
     [Authorize(Roles = EmployeeRoleName)]
-    public class HolidayRequestsController : Controller
+    public class RequestsController : Controller
     {
-        private readonly EmployeeHolidayDbContext data;
+        private readonly IRequestService requests;
+        private readonly IEmployeeService employees;
+        private readonly IRequestStatusService statuses;
 
-        public HolidayRequestsController(EmployeeHolidayDbContext data)
-            => this.data = data;
+        public RequestsController(IRequestService requests, 
+            IEmployeeService employees, IRequestStatusService statuses)
+        {
+            this.requests = requests;
+            this.employees = employees;
+            this.statuses = statuses;
+        }
 
         public IActionResult Details(Guid id)
         {
-            var request = this.data.HolidayRequests.Find(id);
+            var request = this.requests.GetById(id);
 
             if (request is null)
             {
                 return BadRequest();
             }
 
-            var requestStatusTitle = this.data.HolidayRequestStatuses?
-                .Find(request.StatusId)?
-                .Title;
+            var requestStatusTitle = this.statuses.GetTitleById(request.StatusId);
 
-            var model = new HolidayRequestViewModel()
+            var model = new RequestViewModel()
             {
-                StartDate = request.StartDate.ToString("dd MMMM yyyy"),
-                EndDate = request.EndDate.ToString("dd MMMM yyyy"),
+                StartDate = request.StartDate.ToString("d MMMM yyyy"),
+                EndDate = request.EndDate.ToString("d MMMM yyyy"),
                 Status = requestStatusTitle ?? "Pending" 
             };
 
@@ -46,17 +51,17 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
         {
             var dateToday = DateTime.UtcNow;
 
-            var model = new HolidayRequestFormModel()
+            var model = new RequestFormModel()
             {
-                StartDate = dateToday.ToString("dd MMMM yyyy"),
-                EndDate = dateToday.ToString("dd MMMM yyyy")
+                StartDate = dateToday.ToString("d MMMM yyyy"),
+                EndDate = dateToday.ToString("d MMMM yyyy")
             };
 
             return View(model);
         }
 
         [HttpPost]
-        public IActionResult Create(HolidayRequestFormModel requestModel)
+        public IActionResult Create(RequestFormModel requestModel)
         {
             var startDate = DateTime.Parse(requestModel.StartDate);
             var endDate = DateTime.Parse(requestModel.EndDate);
@@ -68,7 +73,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                     "End date should be after start date.");
             }
 
-            var currentEmployee = GetEmployee(User.Id());
+            var currentEmployee = employees.GetEmployee(this.User.Id());
 
             var holidayDaySpan = endDate.Subtract(startDate);
             var holidayDaysCount = holidayDaySpan.Days + 1;
@@ -85,28 +90,9 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                 return View(requestModel);
             }
 
-            var request = new HolidayRequest()
-            {
-                StartDate = startDate,
-                EndDate = endDate,
-                StatusId = GetPendingStatusId(),
-                EmployeeId = currentEmployee.Id,
-                SupervisorId = currentEmployee.SupervisorId,
-            };
-
-            data.HolidayRequests.Add(request);
-            data.SaveChanges();
+            this.requests.Create(startDate, endDate, currentEmployee.Id, currentEmployee.SupervisorId);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
-
-        private Employee GetEmployee(string? userId)
-            => data.Employees
-                    .First(e => e.UserId == userId);
-
-        private int GetPendingStatusId()
-            => data.HolidayRequestStatuses
-                    .First(s => s.Title == HolidayRequestStatusEnum.Pending.ToString())
-                    .Id;
     }
 }

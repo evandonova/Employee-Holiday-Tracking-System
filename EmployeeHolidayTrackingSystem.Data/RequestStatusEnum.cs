@@ -1,6 +1,6 @@
 ﻿namespace EmployeeHolidayTrackingSystem.Data
 {
-    public enum HolidayRequestStatusEnum
+    public enum RequestStatusEnum
     {
         Pending,
         Approved,

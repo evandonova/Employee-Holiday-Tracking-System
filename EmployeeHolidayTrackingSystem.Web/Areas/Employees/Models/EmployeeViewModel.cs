@@ -1,4 +1,4 @@
-﻿using EmployeeHolidayTrackingSystem.Web.Models.HolidayRequests;
+﻿using EmployeeHolidayTrackingSystem.Web.Models.Requests;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models
 {
@@ -10,13 +10,13 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models
 
         public string SupervisorName { get; init; } = null!;
 
-        public IEnumerable<HolidayRequestViewModel> PendingHolidayRequests { get; init; } 
-            = new List<HolidayRequestViewModel>();
+        public IEnumerable<RequestViewModel> PendingHolidayRequests { get; init; } 
+            = new List<RequestViewModel>();
 
-        public IEnumerable<HolidayRequestViewModel> ApprovedHolidayRequests { get; init; }
-            = new List<HolidayRequestViewModel>();
+        public IEnumerable<RequestViewModel> ApprovedHolidayRequests { get; init; }
+            = new List<RequestViewModel>();
 
-        public IEnumerable<HolidayRequestViewModel> DisapprovedHolidayRequests { get; init; }
-            = new List<HolidayRequestViewModel>();
+        public IEnumerable<RequestViewModel> DisapprovedHolidayRequests { get; init; }
+            = new List<RequestViewModel>();
     }
 }
