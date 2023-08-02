@@ -6,6 +6,7 @@ using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
+using static EmployeeHolidayTrackingSystem.Web.Constants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
@@ -38,8 +39,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             var model = new PendingRequestDetailsViewModel()
             {
                 Id = request.Id,
-                StartDate = request.StartDate.ToString("d MMMM yyyy"),
-                EndDate = request.EndDate.ToString("d MMMM yyyy"),
+                StartDate = request.StartDate.ToString(DateFormat),
+                EndDate = request.EndDate.ToString(DateFormat),
                 Employee = new EmployeeExtendedViewModel()
                 {
                     Id = request.EmployeeId,

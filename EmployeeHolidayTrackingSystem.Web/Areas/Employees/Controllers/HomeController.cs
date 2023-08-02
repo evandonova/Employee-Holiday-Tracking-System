@@ -7,6 +7,7 @@ using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
+using static EmployeeHolidayTrackingSystem.Web.Constants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
@@ -32,8 +33,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                     .Select(hr => new RequestViewModel
                     {
                         Id = hr.Id,
-                        StartDate = hr.StartDate.ToString("d MMMM yyyy"),
-                        EndDate = hr.EndDate.ToString("d MMMM yyyy"),
+                        StartDate = hr.StartDate.ToString(DateFormat),
+                        EndDate = hr.EndDate.ToString(DateFormat),
                         Status = statuses.GetStatusTitleById(hr.StatusId) ?? "Pending"
                     })
                     .ToList();

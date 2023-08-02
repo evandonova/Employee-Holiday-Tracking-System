@@ -8,6 +8,7 @@ using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Supervisors;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
+using static EmployeeHolidayTrackingSystem.Web.Constants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
@@ -48,8 +49,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                     .Select(r => new PendingRequestViewModel()
                     {
                         Id = r.Id,
-                        StartDate = r.StartDate.ToString("d MMMM yyyy"),
-                        EndDate = r.EndDate.ToString("d MMMM yyyy"),
+                        StartDate = r.StartDate.ToString(DateFormat),
+                        EndDate = r.EndDate.ToString(DateFormat),
                         EmployeeFullName = this.employees.GetEmployeeFullName(r.EmployeeId)
                     })
             };

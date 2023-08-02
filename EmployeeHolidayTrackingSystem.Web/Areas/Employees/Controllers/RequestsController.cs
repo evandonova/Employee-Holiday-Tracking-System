@@ -7,6 +7,7 @@ using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
+using static EmployeeHolidayTrackingSystem.Web.Constants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
@@ -40,8 +41,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
             var model = new EmployeeRequestViewModel()
             {
-                StartDate = request.StartDate.ToString("d MMMM yyyy"),
-                EndDate = request.EndDate.ToString("d MMMM yyyy"),
+                StartDate = request.StartDate.ToString(DateFormat),
+                EndDate = request.EndDate.ToString(DateFormat),
                 Status = requestStatusTitle ?? "Pending",
                 DisapprovalStatement = request.DisapprovalStatement
             };
@@ -55,8 +56,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
             var model = new RequestFormModel()
             {
-                StartDate = dateToday.ToString("d MMMM yyyy"),
-                EndDate = dateToday.ToString("d MMMM yyyy")
+                StartDate = dateToday.ToString(DateFormat),
+                EndDate = dateToday.ToString(DateFormat)
             };
 
             return View(model);
