@@ -6,7 +6,6 @@
 
 <form method="post">
     <div class="row">
-
         <h4>Employee Details</h4>
 
         <input asp-for="Id" type="hidden">
@@ -42,3 +41,7 @@
         </div>
     </div>
 </form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

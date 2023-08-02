@@ -8,6 +8,7 @@ using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
+using EmployeeHolidayTrackingSystem.Web.Models.Users;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
 {
@@ -26,10 +27,10 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             this.supervisors = supervisors;
         }
 
-        public IActionResult Add() => View(new EmployeeFormModel());
+        public IActionResult Add() => View(new UserFormModel());
 
         [HttpPost]
-        public IActionResult Add(EmployeeFormModel model)
+        public IActionResult Add(UserFormModel model)
         {
             if(this.users.UserWithEmailExists(model.Email!))
             {

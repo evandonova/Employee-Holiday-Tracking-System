@@ -2,9 +2,9 @@
 
 using static EmployeeHolidayTrackingSystem.Data.DataConstants.User;
 
-namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees
+namespace EmployeeHolidayTrackingSystem.Web.Models.Users
 {
-    public class EmployeeFormModel
+    public class UserFormModel
     {
         [Required]
         [StringLength(FirstNameMaxLength, MinimumLength = FirstNameMinLength)]

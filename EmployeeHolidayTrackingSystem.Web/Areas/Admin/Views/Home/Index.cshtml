@@ -14,7 +14,7 @@
         @foreach (var supervisor in Model.Supervisors)
         {
             <a asp-area="Admin" asp-controller="Supervisors" asp-action="Details"
-               asp-route-id="@supervisor.Id">@supervisor.FullName</a>
+               asp-route-id="@supervisor.Id" class="me-4">@supervisor.FullName</a>
         }
     </div>
 </div>
