@@ -20,7 +20,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Employee-Holiday-Tracking-System.Services\EmployeeHolidayTrackingSystem.Services.csproj" />
+    <ProjectReference Include="..\EmployeeHolidayTrackingSystem.Services\EmployeeHolidayTrackingSystem.Services.csproj" />
   </ItemGroup>
 
 </Project>

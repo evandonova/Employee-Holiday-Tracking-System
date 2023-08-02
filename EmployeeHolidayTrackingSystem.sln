@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeHolidayTrackingSyst
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeHolidayTrackingSystem.Data", "EmployeeHolidayTrackingSystem.Data\EmployeeHolidayTrackingSystem.Data.csproj", "{7DBF335E-5891-42AE-82EC-89366A5CAA98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeeHolidayTrackingSystem.Services", "Employee-Holiday-Tracking-System.Services\EmployeeHolidayTrackingSystem.Services.csproj", "{295D86B8-AC6E-4ACF-9276-C74E193A93EF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "EmployeeHolidayTrackingSystem.Services", "EmployeeHolidayTrackingSystem.Services\EmployeeHolidayTrackingSystem.Services.csproj", "{7303E020-D8C0-4AEB-BA7C-7589537D7A7D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{7DBF335E-5891-42AE-82EC-89366A5CAA98}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7DBF335E-5891-42AE-82EC-89366A5CAA98}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7DBF335E-5891-42AE-82EC-89366A5CAA98}.Release|Any CPU.Build.0 = Release|Any CPU
-		{295D86B8-AC6E-4ACF-9276-C74E193A93EF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{295D86B8-AC6E-4ACF-9276-C74E193A93EF}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{295D86B8-AC6E-4ACF-9276-C74E193A93EF}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{295D86B8-AC6E-4ACF-9276-C74E193A93EF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7303E020-D8C0-4AEB-BA7C-7589537D7A7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7303E020-D8C0-4AEB-BA7C-7589537D7A7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7303E020-D8C0-4AEB-BA7C-7589537D7A7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7303E020-D8C0-4AEB-BA7C-7589537D7A7D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
