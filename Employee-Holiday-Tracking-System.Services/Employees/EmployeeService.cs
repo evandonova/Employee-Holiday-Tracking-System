@@ -2,6 +2,7 @@
 using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Services.Users;
+using EmployeeHolidayTrackingSystem.Services.Requests;
 
 namespace EmployeeHolidayTrackingSystem.Services.Employees
 {
@@ -9,11 +10,14 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
     {
         private readonly EmployeeHolidayDbContext data;
         private readonly IUserService users;
+        private readonly IRequestService requests;
 
-        public EmployeeService(EmployeeHolidayDbContext data, IUserService users)
+        public EmployeeService(EmployeeHolidayDbContext data, 
+            IUserService users, IRequestService requests)
         {
             this.data = data;
             this.users = users;
+            this.requests = requests;
         }
 
         public Employee? GetEmployeeByUserId(string? userId)
@@ -77,6 +81,24 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             }
 
             this.data.SaveChanges();
+        }
+
+        public void DeleteEmployee(Guid id)
+        {
+            var employee = this.data.Employees.Find(id);
+
+            if (employee is null)
+            {
+                return;
+            }
+
+            this.requests.DeleteEmployeeRequests(employee.Id);
+
+            this.data.Employees.Remove(employee);
+
+            this.data.SaveChanges();
+
+            this.users.DeleteUser(employee.UserId);
         }
     }
 }

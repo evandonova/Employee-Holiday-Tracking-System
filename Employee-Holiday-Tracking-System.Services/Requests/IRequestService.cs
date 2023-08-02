@@ -13,5 +13,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
         public void UpdateRequestToApproved(Guid requestId);
 
         public void UpdateDisapprovedRequest(Guid requestId, string statement);
+
+        public void DeleteEmployeeRequests(Guid employeeId);
     }
 }

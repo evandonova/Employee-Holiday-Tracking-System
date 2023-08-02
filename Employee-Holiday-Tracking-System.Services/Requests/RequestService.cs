@@ -63,5 +63,13 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
 
             data.SaveChanges();
         }
+
+        public void DeleteEmployeeRequests(Guid employeeId)
+        {
+            var requests = this.data.HolidayRequests.Where(r => r.EmployeeId == employeeId);
+
+            this.data.HolidayRequests.RemoveRange(requests);
+            this.data.SaveChanges();
+        }
     }
 }

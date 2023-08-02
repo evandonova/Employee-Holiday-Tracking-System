@@ -66,7 +66,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             {
                 return BadRequest();
             }
-            //TODO
+
+            this.employees.DeleteEmployee(model.Id);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

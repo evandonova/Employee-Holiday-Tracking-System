@@ -39,5 +39,16 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
                 this.data.SaveChanges();
             }
         }
+
+        public void DeleteUser(string id)
+        {
+            var user = this.data.Users.FirstOrDefault(x => x.Id == id);
+
+            if (user is not null)
+            {
+                this.data.Users.Remove(user);
+                this.data.SaveChanges();
+            }
+        }
     }
 }

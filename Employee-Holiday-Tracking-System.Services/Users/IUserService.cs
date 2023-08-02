@@ -5,5 +5,7 @@
         public void UpdatePassword(string id, string newPassword);
 
         public void UpdateEmail(string id, string newEmail);
+
+        public void DeleteUser(string id);
     }
 }
