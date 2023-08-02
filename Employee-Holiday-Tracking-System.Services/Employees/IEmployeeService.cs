@@ -16,6 +16,9 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
 
         public void SubtractEmployeeHolidayDays(Guid id, int days);
 
-        public void EditEmployee(Guid id, string firstName, string lastName, string newPassword);
+        public void EditEmployee(Guid id, string firstName, string lastName, 
+            string email, string? newPassword);
+
+        public void DeleteEmployee(Guid id);
     }
 }

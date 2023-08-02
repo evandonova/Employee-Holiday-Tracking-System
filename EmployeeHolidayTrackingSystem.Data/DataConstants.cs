@@ -12,6 +12,9 @@
 
             public const int PasswordMaxLength = 30;
             public const int PasswordMinLength = 6;
+
+            public const int EmailMaxLength = 30;
+            public const int EmailMinLength = 8;
         }
 
         public class Employee

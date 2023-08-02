@@ -5,26 +5,40 @@
 }
 
 <form method="post">
-    <h4>Employee Details</h4>
+    <div class="row">
 
-    <input asp-for="Id" type="hidden">
+        <h4>Employee Details</h4>
 
-    <label asp-for="FirstName"></label>
-    <input asp-for="FirstName" class="form-control col-1">
-    <span asp-validation-for="FirstName" class="small text-danger"></span>
+        <input asp-for="Id" type="hidden">
 
-    <label asp-for="LastName"></label>
-    <input asp-for="LastName" class="form-control col-1">
-    <span asp-validation-for="LastName" class="small text-danger"></span>
+        <div class="col-5">
+            <label asp-for="FirstName"></label>
+            <input asp-for="FirstName" class="form-control col-1">
+            <span asp-validation-for="FirstName" class="small text-danger"></span>
 
-    <label asp-for="HolidayDaysRemaining"></label>
-    <input asp-for="HolidayDaysRemaining" class="form-control col-1" readonly>
+            <label asp-for="LastName"></label>
+            <input asp-for="LastName" class="form-control col-1">
+            <span asp-validation-for="LastName" class="small text-danger"></span>
 
-    <label>Change Password</label>
-    <input asp-for="NewPassword" class="form-control col-1" placeholder="New Password">
-    <span asp-validation-for="NewPassword" class="small text-danger"></span>
+            <label asp-for="HolidayDaysRemaining"></label>
+            <input asp-for="HolidayDaysRemaining" class="form-control col-1" readonly>
 
-    <input asp-area="Supervisors" asp-controller="Employees" asp-action="Edit" class="btn btn-primary" type="submit" value="Edit Employee" />
-    <input asp-area="Supervisors" asp-controller="Employees" asp-action="Delete" class="btn btn-primary" type="submit" value="Delete Employee" />
+            <input asp-area="Supervisors" asp-controller="Employees" asp-action="Edit" class="btn btn-primary" type="submit" value="Edit Employee" />
+            <input asp-area="Supervisors" asp-controller="Employees" asp-action="Delete" class="btn btn-primary" type="submit" value="Delete Employee" />
+        </div>
+
+        <div class="col-5">
+            <label asp-for="Email"></label>
+            <input asp-for="Email" class="form-control col-1">
+            <span asp-validation-for="Email" class="small text-danger"></span>
+
+            <label>Change Password</label>
+            <input asp-for="NewPassword" class="form-control col-1" type="password" placeholder="New Password">
+            <span asp-validation-for="NewPassword" class="small text-danger"></span>
+
+            <label>Confirm New Password</label>
+            <input asp-for="ConfirmPassword" class="form-control col-1" type="password" placeholder="Confirm New Password">
+            <span asp-validation-for="ConfirmPassword" class="small text-danger"></span>
+        </div>
+    </div>
 </form>
-

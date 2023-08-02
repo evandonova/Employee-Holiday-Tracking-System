@@ -14,9 +14,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         private readonly IEmployeeService employees;
 
         public EmployeesController(IEmployeeService employees)
-        {
-            this.employees = employees;
-        }
+            => this.employees = employees;
 
         public IActionResult Details(Guid id)
         {
@@ -32,7 +30,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 Id = employee.Id,
                 FirstName = employee.User.FirstName,
                 LastName = employee.User.LastName,
-                HolidayDaysRemaining = employee.HolidayDaysRemaining
+                HolidayDaysRemaining = employee.HolidayDaysRemaining,
+                Email = employee.User.Email
             };
 
             return View(model);
@@ -53,7 +52,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return this.View("Details", model);
             }
 
-            this.employees.EditEmployee(model.Id, model.FirstName, model.LastName, model.NewPassword);
+            this.employees.EditEmployee(model.Id, model.FirstName, model.LastName, model.Email, model.NewPassword);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

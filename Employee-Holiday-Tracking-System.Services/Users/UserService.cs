@@ -23,5 +23,21 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
                 this.data.SaveChanges();
             }
         }
+
+        public void UpdateEmail(string id, string newEmail)
+        {
+            var user = this.data.Users.FirstOrDefault(x => x.Id == id);
+
+            if (user is not null)
+            {
+                user.Email = newEmail;
+                user.NormalizedEmail = newEmail.ToUpper();
+
+                user.UserName = newEmail;
+                user.NormalizedUserName = newEmail.ToUpper();
+
+                this.data.SaveChanges();
+            }
+        }
     }
 }

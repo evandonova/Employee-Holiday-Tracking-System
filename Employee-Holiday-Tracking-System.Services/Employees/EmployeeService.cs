@@ -56,7 +56,8 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             this.data.SaveChanges();
         }
 
-        public void EditEmployee(Guid id, string firstName, string lastName, string newPassword)
+        public void EditEmployee(Guid id, string firstName, string lastName, 
+            string email, string? newPassword)
         {
             var employee = this.data.Employees.Find(id);
     
@@ -68,9 +69,11 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             employee.User.FirstName = firstName;
             employee.User.LastName = lastName;
 
-            if(newPassword is not null) 
+            this.users.UpdateEmail(employee.UserId, email);
+
+            if (newPassword is not null) 
             {
-                users.UpdatePassword(employee.UserId, newPassword);
+                this.users.UpdatePassword(employee.UserId, newPassword);
             }
 
             this.data.SaveChanges();
