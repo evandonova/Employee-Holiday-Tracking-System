@@ -46,8 +46,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
             SeedSupervisorRoleAndUser(userManager, roleManager);
             SeedEmployeeRoleAndUser(userManager, roleManager);
 
-            SeedSupervisor(dbContext);
-            SeedEmployee(dbContext);
+            if(supervisorUser is not null)
+            {
+                SeedSupervisor(dbContext);
+            }
+
+            if(employeeUser is not null)
+            {
+                SeedEmployee(dbContext);
+            }
         }
 
         private static void SeedHolidayStatuses(EmployeeHolidayDbContext dbContext)
