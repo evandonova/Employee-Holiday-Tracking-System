@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 
-using static EmployeeHolidayTrackingSystem.Web.Constants;
+using static EmployeeHolidayTrackingSystem.Web.Areas.Admin.AdminConstants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 

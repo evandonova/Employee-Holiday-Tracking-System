@@ -23,5 +23,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             string email, string? newPassword);
 
         public void DeleteEmployee(Guid id);
+
+        public void DeleteSupervisorEmployees(Guid supervisorId);
     }
 }

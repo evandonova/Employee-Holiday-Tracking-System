@@ -1,0 +1,23 @@
+﻿@model AdminProfileViewModel
+
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<div class="card">
+    <h5 class="card-header">My Admin Info</h5>
+    <div class="card-body">
+        <h5 class="card-title mb-3 fw-bold">@Model.FullName</h5>
+        <hr class="hr" />
+        <p class="card-title mt-3">Supervisors:</p>
+
+        @foreach (var supervisor in Model.Supervisors)
+        {
+            <a asp-area="Admin" asp-controller="Supervisors" asp-action="Details"
+               asp-route-id="@supervisor.Id">@supervisor.FullName</a>
+        }
+    </div>
+</div>
+
+<a asp-area="Admin" asp-controller="Supervisors" asp-action="Add"
+   class="btn btn-primary w-100">Add New Supervisor</a>

@@ -4,6 +4,8 @@
     {
         public string CreateUser(string firstName, string lastName, string email, string password);
 
+        public string GetUserFullName(string id);
+
         public bool UserWithEmailExists(string email);
 
         public void AddUserToRole(string userId, string roleName);

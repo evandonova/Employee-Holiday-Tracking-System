@@ -115,10 +115,35 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             this.requests.DeleteEmployeeRequests(employee.Id);
 
             this.data.Employees.Remove(employee);
-
             this.data.SaveChanges();
 
             this.users.DeleteUser(employee.UserId);
+        }
+
+        public void DeleteSupervisorEmployees(Guid supervisorId)
+        {
+            var supervisor = this.data.Supervisors.Include(s => s.Employees)
+                .FirstOrDefault(s => s.Id == supervisorId);
+
+            if (supervisor is null)
+            {
+                return;
+            }
+
+            foreach (var employee in supervisor.Employees)
+            {
+                this.requests.DeleteEmployeeRequests(employee.Id);
+            }
+
+            var employeeUserIds = supervisor.Employees.Select(e => e.UserId).ToList();
+
+            this.data.Employees.RemoveRange(supervisor.Employees);
+            this.data.SaveChanges();
+
+            foreach (var userId in employeeUserIds)
+            {
+                this.users.DeleteUser(userId);
+            }
         }
     }
 }

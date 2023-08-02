@@ -32,6 +32,12 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
             return newUser.Id;
         }
 
+        public string GetUserFullName(string id)
+        {
+            var user = this.data.Users.Find(id);
+            return $"{user?.FirstName} {user?.LastName}" ?? string.Empty;
+        }
+
         public bool UserWithEmailExists(string email)
             => this.data.Users.Any(u => u.Email == email);
 

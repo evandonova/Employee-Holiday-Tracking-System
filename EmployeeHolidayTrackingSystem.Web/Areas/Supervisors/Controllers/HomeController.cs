@@ -16,15 +16,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
     [Authorize(Roles = SupervisorRoleName)]
     public class HomeController : Controller
     {
-        private readonly ISupervisorService supervisors;
         private readonly IEmployeeService employees;
+        private readonly ISupervisorService supervisors;
         private readonly IRequestStatusService statuses;
 
-        public HomeController(ISupervisorService supervisors, 
-            IEmployeeService employees, IRequestStatusService statuses)
+        public HomeController(IEmployeeService employees, 
+            ISupervisorService supervisors, IRequestStatusService statuses)
         {
-            this.supervisors = supervisors;
             this.employees = employees;
+            this.supervisors = supervisors;
             this.statuses = statuses;
         }
 
