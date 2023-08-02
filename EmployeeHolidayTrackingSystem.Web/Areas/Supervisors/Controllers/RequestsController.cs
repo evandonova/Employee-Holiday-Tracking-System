@@ -73,7 +73,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             if (!this.employees.CheckIfEmployeeHasEnoughHolidayDays(employeeId, holidayDaysCount))
             {
                 TempData["message"] = "The Employee has less holiday days remaining than requested. You cannot approve their request.";
-                return View(model);
+                return View("~/Areas/Supervisors/Views/Requests/Respond.cshtml", model);
             }
 
             this.requests.UpdateRequestToApproved(model.Id);
