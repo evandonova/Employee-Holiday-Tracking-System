@@ -3,13 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Supervisors;
-using EmployeeHolidayTrackingSystem.Web.Infrastructure;
+using EmployeeHolidayTrackingSystem.Web.Models.Users;
 using EmployeeHolidayTrackingSystem.Web.Areas.Admin.Models.Supervisors;
-using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Admin.AdminConstants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
-using EmployeeHolidayTrackingSystem.Web.Models.Users;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
 {
@@ -52,19 +50,19 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
 
         public IActionResult Details(Guid id)
         {
-            var supervisor = this.supervisors.GetSupervisorById(id);
-
-            if (supervisor is null)
+            if (!this.supervisors.SupervisorExists(id))
             {
                 return BadRequest();
             }
 
+            var supervisor = this.supervisors.GetDetails(id);
+
             var model = new SupervisorDetailsFormModel()
             {
-                Id = supervisor.Id,
-                FirstName = supervisor.User.FirstName,
-                LastName = supervisor.User.LastName,
-                Email = supervisor.User.Email
+                Id = supervisor!.Id,
+                FirstName = supervisor.FirstName,
+                LastName = supervisor.LastName,
+                Email = supervisor.Email
             };
 
             return View(model);
@@ -73,14 +71,12 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Edit(SupervisorDetailsFormModel model)
         {
-            var supervisor = this.supervisors.GetSupervisorById(model.Id);
-
-            if (supervisor is null)
+            if (!this.supervisors.SupervisorExists(model.Id))
             {
                 return BadRequest();
             }
 
-            if (model.Email != supervisor.User.Email && this.users.UserWithEmailExists(model.Email!))
+            if (model.Email != this.supervisors.GetSupervisorEmail(model.Id) && this.users.UserWithEmailExists(model.Email!))
             {
                 ModelState.AddModelError(nameof(model.Email),
                     "User with this email already exists.");
@@ -91,7 +87,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
                 return View("Details", model);
             }
 
-            this.supervisors.EditSupervisor(model.Id, model.FirstName, model.LastName, model.Email, model.NewPassword);
+            this.supervisors.EditSupervisor(model.Id, model.FirstName!, model.LastName!, model.Email!, model.NewPassword);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
@@ -99,9 +95,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
         [HttpPost]
         public IActionResult Delete(SupervisorDetailsFormModel model)
         {
-            var supervisor = this.supervisors.GetSupervisorById(model.Id);
-
-            if (supervisor is null)
+            if (!this.supervisors.SupervisorExists(model.Id))
             {
                 return BadRequest();
             }

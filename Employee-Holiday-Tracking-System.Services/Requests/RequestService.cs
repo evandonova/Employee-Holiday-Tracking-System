@@ -1,6 +1,9 @@
 ﻿using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
+using EmployeeHolidayTrackingSystem.Services.Requests.Models;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
+
+using static EmployeeHolidayTrackingSystem.Data.DataConstants.HolidayRequest;
 
 namespace EmployeeHolidayTrackingSystem.Services.Requests
 {
@@ -15,8 +18,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             this.statuses = statuses;
         }
 
-        public HolidayRequest? GetRequestById(Guid id)
-            => this.data.HolidayRequests.Find(id);
 
         public bool RequestExists(Guid id)
             => this.data.HolidayRequests.Find(id) is not null;
@@ -40,7 +41,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
         {
             var request = this.GetRequestById(requestId);
 
-            if(request is null) 
+            if (request is null)
             {
                 return;
             }
@@ -71,5 +72,76 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             this.data.HolidayRequests.RemoveRange(requests);
             this.data.SaveChanges();
         }
+
+        public List<RequestServiceModel> GetPendingEmployeeRequests(Guid? employeeId)
+            => this.data.HolidayRequests
+                .Where(h => h.EmployeeId == employeeId &&
+                    h.Status.Title == RequestStatusEnum.Pending.ToString())
+                .Select(h => new RequestServiceModel()
+                {
+                    Id = h.Id,
+                    StartDate = h.StartDate.ToString(DateFormat),
+                    EndDate = h.EndDate.ToString(DateFormat),
+                    Status = h.Status.Title
+                })
+                .ToList();
+
+        public List<RequestServiceModel> GetApprovedEmployeeRequests(Guid? employeeId)
+        => this.data.HolidayRequests
+                .Where(h => h.EmployeeId == employeeId &&
+                    h.Status.Title == RequestStatusEnum.Approved.ToString())
+                .Select(h => new RequestServiceModel()
+                {
+                    Id = h.Id,
+                    StartDate = h.StartDate.ToString(DateFormat),
+                    EndDate = h.EndDate.ToString(DateFormat),
+                    Status = h.Status.Title
+                })
+                .ToList();
+
+        public List<RequestServiceModel> GetDisapprovedEmployeeRequests(Guid? employeeId)
+            => this.data.HolidayRequests
+                    .Where(h => h.EmployeeId == employeeId &&
+                        h.Status.Title == RequestStatusEnum.Disapproved.ToString())
+                    .Select(h => new RequestServiceModel()
+                    {
+                        Id = h.Id,
+                        StartDate = h.StartDate.ToString(DateFormat),
+                        EndDate = h.EndDate.ToString(DateFormat),
+                        Status = h.Status.Title
+                    })
+                    .ToList();
+
+        public RequestServiceModel? GetRequestDetails(Guid id)
+            => this.data.HolidayRequests
+                 .Where(r => r.Id == id)
+                 .Select(r => new RequestServiceModel()
+                 {
+                     Id = r.Id,
+                     StartDate = r.StartDate.ToString(DateFormat),
+                     EndDate = r.EndDate.ToString(DateFormat),
+                     DisapprovalStatement = r.DisapprovalStatement,
+                     Status = r.Status.Title,
+                     EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}"
+                 })
+                .FirstOrDefault();
+
+        public Guid GetRequestEmployeeId(Guid id)
+            => this.data.HolidayRequests.Find(id)!.EmployeeId;
+
+        public List<RequestServiceModel> GetPendingSupervisorRequests(Guid? supervisorId)
+            => this.data.HolidayRequests
+            .Where(r => r.SupervisorId == supervisorId && r.Status.Title == RequestStatusEnum.Pending.ToString())
+            .Select(r => new RequestServiceModel()
+            {
+                Id = r.Id,
+                EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}",
+                StartDate = r.StartDate.ToString(DateFormat),
+                EndDate = r.EndDate.ToString(DateFormat)
+            })
+            .ToList();
+
+        private HolidayRequest? GetRequestById(Guid id)
+            => this.data.HolidayRequests.Find(id);
     }
 }

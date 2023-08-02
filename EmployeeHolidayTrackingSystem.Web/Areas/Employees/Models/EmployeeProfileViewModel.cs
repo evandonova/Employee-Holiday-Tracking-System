@@ -1,14 +1,18 @@
-﻿using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
+﻿using System.ComponentModel.DataAnnotations;
+using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models
 {
     public class EmployeeProfileViewModel
     {
-        public string FullName { get; init; } = null!;
+        [Display(Name = "Full Name")]
+        public string? FullName { get; init; }
 
+        [Display(Name = "Holiday Days Remaining")]
         public int HolidayDaysRemaining { get; init; }
 
-        public string SupervisorName { get; init; } = null!;
+        [Display(Name = "Supervisor Name")]
+        public string? SupervisorName { get; init; }
 
         public IEnumerable<RequestViewModel> PendingHolidayRequests { get; init; }
             = new List<RequestViewModel>();

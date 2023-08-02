@@ -1,14 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using EmployeeHolidayTrackingSystem.Services.Requests;
+using EmployeeHolidayTrackingSystem.Services.Employees;
+using EmployeeHolidayTrackingSystem.Services.Supervisors;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
-using EmployeeHolidayTrackingSystem.Services.Employees;
-using EmployeeHolidayTrackingSystem.Services.Supervisors;
-using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
-using static EmployeeHolidayTrackingSystem.Web.Constants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
@@ -19,40 +18,41 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
     {
         private readonly IEmployeeService employees;
         private readonly ISupervisorService supervisors;
-        private readonly IRequestStatusService statuses;
+        private readonly IRequestService requests;
 
         public HomeController(IEmployeeService employees, 
-            ISupervisorService supervisors, IRequestStatusService statuses)
+            ISupervisorService supervisors, IRequestService requests)
         {
             this.employees = employees;
             this.supervisors = supervisors;
-            this.statuses = statuses;
+            this.requests = requests;
         }
 
         public IActionResult Index()
         {
-            var supervisor = this.supervisors.GetSupervisorByUserId(this.User.Id());
+            var supervisorId = this.supervisors.GetSupervisorIdByUserId(this.User.Id()!);
 
-            var pendingStatusId = this.statuses.GetPendingStatusId();
+            var employees = this.employees.GetSupervisorEmployees(supervisorId)
+                .Select(e => new EmployeeViewModel()
+                {
+                    Id = e.Id,
+                    FullName = e.FullName,
+                }).ToList();
+
+            var requests = this.requests.GetPendingSupervisorRequests(supervisorId)
+                .Select(r => new PendingRequestViewModel()
+                {
+                    Id = r.Id,
+                    StartDate = r.StartDate,
+                    EndDate = r.EndDate,
+                    EmployeeFullName = r.EmployeeFullName
+                });
 
             var model = new SupervisorProfileViewModel()
             {
-                FullName = $"{supervisor.User.FirstName} {supervisor.User.LastName}",
-                Employees = supervisor.Employees
-                    .Select(e => new EmployeeViewModel()
-                    {
-                        Id = e.Id,
-                        FullName = this.employees.GetEmployeeFullName(e.Id)
-                    }),
-                PendingRequests = supervisor.HolidayRequests
-                    .Where(r => r.StatusId == pendingStatusId)
-                    .Select(r => new PendingRequestViewModel()
-                    {
-                        Id = r.Id,
-                        StartDate = r.StartDate.ToString(DateFormat),
-                        EndDate = r.EndDate.ToString(DateFormat),
-                        EmployeeFullName = this.employees.GetEmployeeFullName(r.EmployeeId)
-                    })
+                FullName = this.supervisors.GetSupervisorFullName(supervisorId),
+                Employees = employees,
+                PendingRequests = requests
             };
 
             return View(model);

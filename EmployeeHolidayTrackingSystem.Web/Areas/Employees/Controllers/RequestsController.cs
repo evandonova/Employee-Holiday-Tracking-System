@@ -7,7 +7,7 @@ using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
-using static EmployeeHolidayTrackingSystem.Web.Constants;
+using static EmployeeHolidayTrackingSystem.Data.DataConstants.HolidayRequest;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
@@ -30,20 +30,19 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
         public IActionResult Details(Guid id)
         {
-            var request = this.requests.GetRequestById(id);
-
-            if (request is null)
+            if (!this.requests.RequestExists(id))
             {
                 return BadRequest();
             }
 
-            var requestStatusTitle = this.statuses.GetStatusTitleById(request.StatusId);
+            var request = this.requests.GetRequestDetails(id);
 
             var model = new EmployeeRequestViewModel()
             {
-                StartDate = request.StartDate.ToString(DateFormat),
-                EndDate = request.EndDate.ToString(DateFormat),
-                Status = requestStatusTitle ?? "Pending",
+                Id = request!.Id,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                Status = request.Status,
                 DisapprovalStatement = request.DisapprovalStatement
             };
 
@@ -81,19 +80,21 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                 return View(requestModel);
             }
 
-            var currentEmployee = employees.GetEmployeeByUserId(this.User.Id());
-
             var holidayDaySpan = endDate.Subtract(startDate);
             var holidayDaysCount = holidayDaySpan.Days + 1;
 
+            var employeeId = this.employees.GetEmployeeIdByUserId(this.User.Id()!);
+
             // If employee requests more days than they have remaining
-            if (holidayDaysCount > currentEmployee.HolidayDaysRemaining)
+            if (!this.employees.CheckIfEmployeeHasEnoughHolidayDays(employeeId, holidayDaysCount))
             {
                 TempData["message"] = "You try to request more holiday days than you have remaining.";
                 return View(requestModel);
             }
 
-            this.requests.Create(startDate, endDate, currentEmployee.Id, currentEmployee.SupervisorId);
+            var supervisorId = this.employees.GetEmployeeSupervisorId(employeeId);
+
+            this.requests.Create(startDate, endDate, employeeId, supervisorId);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

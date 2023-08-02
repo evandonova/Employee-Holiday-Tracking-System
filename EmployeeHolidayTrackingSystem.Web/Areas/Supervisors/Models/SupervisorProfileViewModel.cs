@@ -5,7 +5,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models
 {
     public class SupervisorProfileViewModel
     {
-        public string FullName { get; init; } = null!;
+        public string? FullName { get; init; }
 
         public IEnumerable<EmployeeViewModel> Employees { get; init; }
             = new List<EmployeeViewModel>();

@@ -10,17 +10,17 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Models.Supervisors
 
         [Required]
         [StringLength(FirstNameMaxLength, MinimumLength = FirstNameMinLength)]
-        public string FirstName { get; init; } = null!;
+        public string? FirstName { get; init; }
 
         [Required]
         [StringLength(LastNameMaxLength, MinimumLength = LastNameMinLength)]
-        public string LastName { get; init; } = null!;
+        public string? LastName { get; init; }
 
         [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         [StringLength(EmailMaxLength, MinimumLength = EmailMinLength)]
-        public string Email { get; init; } = null!;
+        public string? Email { get; init; }
 
         [DataType(DataType.Password)]
         [StringLength(PasswordMaxLength, MinimumLength = PasswordMinLength)]

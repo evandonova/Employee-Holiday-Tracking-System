@@ -26,6 +26,7 @@
         {
             public const int DisapprovalStatementMaxLength = 500;
             public const int DisapprovalStatementMinLength = 20;
+            public static string DateFormat = "d MMMM yyyy";
         }
 
         public class HolidayRequestStatus

@@ -7,9 +7,9 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests
         public Guid Id { get; init; }
 
         [Display(Name = "Start Date")]
-        public string StartDate { get; init; } = null!;
+        public string? StartDate { get; init; }
 
         [Display(Name = "End Date")]
-        public string EndDate { get; init; } = null!;
+        public string? EndDate { get; init; }
     }
 }

@@ -3,6 +3,7 @@ using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Requests;
+using EmployeeHolidayTrackingSystem.Services.Employees.Models;
 
 using static EmployeeHolidayTrackingSystem.Data.DataConstants.Employee;
 
@@ -14,7 +15,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
         private readonly IUserService users;
         private readonly IRequestService requests;
 
-        public EmployeeService(EmployeeHolidayDbContext data, 
+        public EmployeeService(EmployeeHolidayDbContext data,
             IUserService users, IRequestService requests)
         {
             this.data = data;
@@ -22,17 +23,40 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             this.requests = requests;
         }
 
-        public Employee? GetEmployeeByUserId(string? userId)
-            => this.data.Employees
-                    .Include(e => e.User)
-                    .Include(e => e.Supervisor.User)
-                    .Include(e => e.HolidayRequests)
-                    .FirstOrDefault(e => e.UserId == userId);
+        public Guid GetEmployeeIdByUserId(string userId)
+            => this.data.Employees.FirstOrDefault(e => e.UserId == userId)!.Id;
 
-        public Employee? GetEmployeeById(Guid id)
+        public bool EmployeeExists(Guid id)
+            => this.data.Employees.Any(e => e.Id == id);
+
+        public string? GetEmployeeEmail(Guid id)
             => this.data.Employees
-                    .Include(e => e.User)
-                    .FirstOrDefault(e => e.Id == id);
+               .Where(e => e.Id == id)
+               .Select(e => e.User.Email)
+               .FirstOrDefault();
+
+        public EmployeeDetailsServiceModel GetEmployeeDetails(Guid id)
+            => this.data.Employees
+                .Where(e => e.Id == id)
+                .Select(e => new EmployeeDetailsServiceModel()
+                {
+                    Id = e.Id,
+                    FirstName = e.User.FirstName,
+                    LastName = e.User.LastName,
+                    Email = e.User.Email,
+                    HolidayDaysRemaining = e.HolidayDaysRemaining
+                })
+                .FirstOrDefault()!;
+
+        public List<EmployeeServiceModel> GetSupervisorEmployees(Guid? supervisorId)
+            => this.data.Employees
+                .Where(e => e.SupervisorId == supervisorId)
+                .Select(e => new EmployeeServiceModel()
+                {
+                    Id = e.Id,
+                    FullName = $"{e.User.FirstName} {e.User.LastName}",
+                })
+                .ToList();
 
         public string GetEmployeeFullName(Guid id)
         {
@@ -40,16 +64,19 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             return $"{employee?.User.FirstName} {employee?.User.LastName}" ?? string.Empty;
         }
 
+        public Guid GetEmployeeSupervisorId(Guid employeeId)
+            => this.data.Employees.FirstOrDefault(e => e.Id == employeeId)!.SupervisorId;
+
         public int? GetEmployeeHolidayDaysRemaining(Guid id)
             => this.data.Employees.Find(id)?.HolidayDaysRemaining;
 
-        public bool CheckIfEmployeeHasEnoughHolidayDays(Guid id, int days)
+        public bool CheckIfEmployeeHasEnoughHolidayDays(Guid? id, int days)
         {
             var employee = this.data.Employees.Find(id);
             return employee?.HolidayDaysRemaining > days;
         }
 
-        public void CreateEmployee(string firstName, string lastName, 
+        public void CreateEmployee(string firstName, string lastName,
             string email, string password, Guid supervisorId, string employeeRoleName)
         {
             var newUserId = this.users.CreateUser(firstName, lastName, email, password);
@@ -71,7 +98,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
         {
             var employee = this.data.Employees.Find(id);
 
-            if (employee is null) 
+            if (employee is null)
             {
                 return;
             }
@@ -80,12 +107,14 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             this.data.SaveChanges();
         }
 
-        public void EditEmployee(Guid id, string firstName, string lastName, 
+        public void EditEmployee(Guid id, string firstName, string lastName,
             string email, string? newPassword)
         {
-            var employee = this.data.Employees.Find(id);
-    
-            if(employee is null)
+            var employee = this.data.Employees
+                .Include(e => e.User)
+                .FirstOrDefault(e => e.Id == id);
+
+            if (employee is null)
             {
                 return;
             }
@@ -95,7 +124,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
 
             this.users.UpdateEmail(employee.UserId, email);
 
-            if (newPassword is not null) 
+            if (newPassword is not null)
             {
                 this.users.UpdatePassword(employee.UserId, newPassword);
             }
@@ -145,5 +174,17 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
                 this.users.DeleteUser(userId);
             }
         }
+
+        public EmployeeServiceModel? GetEmployeeProfileData(string? userId)
+            => this.data.Employees
+                .Where(e => e.UserId == userId)
+                .Select(e => new EmployeeServiceModel()
+                {
+                    Id = e.Id,
+                    FullName = $"{e.User.FirstName} {e.User.LastName}",
+                    SupervisorName = $"{e.Supervisor.User.FirstName} {e.Supervisor.User.LastName}",
+                    HolidayDaysRemaining = e.HolidayDaysRemaining
+                })
+                .FirstOrDefault();
     }
 }

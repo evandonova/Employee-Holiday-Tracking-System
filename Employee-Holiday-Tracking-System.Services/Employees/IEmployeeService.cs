@@ -1,18 +1,27 @@
 ﻿using EmployeeHolidayTrackingSystem.Data.Models;
+using EmployeeHolidayTrackingSystem.Services.Employees.Models;
 
 namespace EmployeeHolidayTrackingSystem.Services.Employees
 {
     public interface IEmployeeService
     {
-        public Employee? GetEmployeeByUserId(string? userId);
+        public Guid GetEmployeeIdByUserId(string userId);
 
-        public Employee? GetEmployeeById(Guid id);
+        public bool EmployeeExists(Guid id);
+
+        public string? GetEmployeeEmail(Guid id);
 
         public string GetEmployeeFullName(Guid id);
 
+        public EmployeeDetailsServiceModel GetEmployeeDetails(Guid id);
+
+        public Guid GetEmployeeSupervisorId(Guid employeeId);
+
+        public List<EmployeeServiceModel> GetSupervisorEmployees(Guid? supervisorId);
+
         public int? GetEmployeeHolidayDaysRemaining(Guid id);
 
-        public bool CheckIfEmployeeHasEnoughHolidayDays(Guid id, int days);
+        public bool CheckIfEmployeeHasEnoughHolidayDays(Guid? id, int days);
 
         public void CreateEmployee(string firstName, string lastName,
             string email, string password, Guid supervisorId, string employeeRoleName);
@@ -25,5 +34,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
         public void DeleteEmployee(Guid id);
 
         public void DeleteSupervisorEmployees(Guid supervisorId);
+
+        public EmployeeServiceModel? GetEmployeeProfileData(string? userId);
     }
 }

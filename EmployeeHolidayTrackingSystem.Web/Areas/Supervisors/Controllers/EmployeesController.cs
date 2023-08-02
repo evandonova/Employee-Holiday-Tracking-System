@@ -3,12 +3,12 @@ using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Supervisors;
+using EmployeeHolidayTrackingSystem.Web.Models.Users;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
-using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
-using EmployeeHolidayTrackingSystem.Web.Models.Users;
+using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
 {
@@ -43,7 +43,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View(model);
             }
 
-            var supervisorId = this.supervisors.GetSupervisorByUserId(this.User.Id()).Id;
+            var supervisorId = this.supervisors.GetSupervisorIdByUserId(this.User.Id()!);
 
             this.employees.CreateEmployee(model.FirstName!, model.LastName!, 
                 model.Email!, model.Password!, supervisorId, EmployeeRoleName);
@@ -53,20 +53,20 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
 
         public IActionResult Details(Guid id)
         {
-            var employee = this.employees.GetEmployeeById(id);
-
-            if (employee is null)
+            if (!this.employees.EmployeeExists(id))
             {
                 return BadRequest();
             }
 
+            var employeeData = this.employees.GetEmployeeDetails(id);
+
             var model = new EmployeeDetailsFormModel()
             {
-                Id = employee.Id,
-                FirstName = employee.User.FirstName,
-                LastName = employee.User.LastName,
-                HolidayDaysRemaining = employee.HolidayDaysRemaining,
-                Email = employee.User.Email
+                Id = employeeData.Id,
+                FirstName = employeeData.FirstName,
+                LastName = employeeData.LastName,
+                HolidayDaysRemaining = employeeData.HolidayDaysRemaining,
+                Email = employeeData.Email
             };
 
             return View(model);
@@ -75,14 +75,12 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         [HttpPost]
         public IActionResult Edit(EmployeeDetailsFormModel model)
         {
-            var employee = this.employees.GetEmployeeById(model.Id);
-
-            if (employee is null)
+            if (!this.employees.EmployeeExists(model.Id))
             {
                 return BadRequest();
             }
 
-            if (model.Email != employee.User.Email && this.users.UserWithEmailExists(model.Email!))
+            if (model.Email != this.employees.GetEmployeeEmail(model.Id) && this.users.UserWithEmailExists(model.Email!))
             {
                 ModelState.AddModelError(nameof(model.Email),
                     "User with this email already exists.");
@@ -93,7 +91,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View("Details", model);
             }
 
-            this.employees.EditEmployee(model.Id, model.FirstName, model.LastName, model.Email, model.NewPassword);
+            this.employees.EditEmployee(model.Id, model.FirstName!, model.LastName!, model.Email!, model.NewPassword);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
@@ -101,9 +99,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         [HttpPost]
         public IActionResult Delete(EmployeeDetailsFormModel model)
         {
-            var employee = this.employees.GetEmployeeById(model.Id);
-
-            if (employee is null)
+            if (!this.employees.EmployeeExists(model.Id))
             {
                 return BadRequest();
             }

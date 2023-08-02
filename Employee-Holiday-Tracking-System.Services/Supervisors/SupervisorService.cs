@@ -1,8 +1,9 @@
-﻿using Microsoft.EntityFrameworkCore;
-using EmployeeHolidayTrackingSystem.Data;
+﻿using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
+using EmployeeHolidayTrackingSystem.Services.Supervisors.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeHolidayTrackingSystem.Services.Supervisors
 {
@@ -20,20 +21,44 @@ namespace EmployeeHolidayTrackingSystem.Services.Supervisors
             this.employees = employees;
         }
 
-        public Supervisor? GetSupervisorById(Guid id)
+        public string? GetSupervisorFullName(Guid? supervisorId)
             => this.data.Supervisors
-                    .Include(e => e.User)
-                    .FirstOrDefault(e => e.Id == id);
+                .Where(s => s.Id == supervisorId)
+                .Select(s => $"{s.User.FirstName} {s.User.LastName}")
+                .FirstOrDefault();
 
-        public Supervisor? GetSupervisorByUserId(string? userId)
+        public Guid GetSupervisorIdByUserId(string userId)
+            => this.data.Supervisors.FirstOrDefault(s => s.UserId == userId)!.Id;
+
+        public List<SupervisorServiceModel> GetAll()
             => this.data.Supervisors
-                    .Include(s => s.User)
-                    .Include(s => s.Employees)
-                    .Include(s => s.HolidayRequests)
-                    .FirstOrDefault(s => s.UserId == userId);
+            .Select(s => new SupervisorServiceModel()
+            {
+                Id = s.Id,
+                FullName = $"{s.User.FirstName} {s.User.LastName}"
+            })
+            .ToList();
 
-        public List<Supervisor> GetAll()
-            => this.data.Supervisors.ToList();
+        public SupervisorDetailsServiceModel? GetDetails(Guid id)
+            => this.data.Supervisors
+            .Where(s => s.Id == id)
+            .Select(s => new SupervisorDetailsServiceModel()
+            {
+                Id = s.Id,
+                FirstName = s.User.FirstName,
+                LastName = s.User.LastName,
+                Email = s.User.Email
+            })
+            .FirstOrDefault();
+
+        public bool SupervisorExists(Guid id)
+            => this.data.Supervisors.Any(s => s.Id == id);
+
+        public string? GetSupervisorEmail(Guid id)
+           => this.data.Supervisors
+              .Where(s => s.Id == id)
+              .Select(s => s.User.Email)
+              .FirstOrDefault();
 
         public void CreateSupervisor(string firstName, string lastName,
             string email, string password, string supervisorRoleName)
@@ -54,7 +79,9 @@ namespace EmployeeHolidayTrackingSystem.Services.Supervisors
         public void EditSupervisor(Guid id, string firstName, string lastName,
             string email, string? newPassword)
         {
-            var supervisor = this.data.Supervisors.Find(id);
+            var supervisor = this.data.Employees
+                .Include(s => s.User)
+                .FirstOrDefault(s => s.Id == id);
 
             if (supervisor is null)
             {

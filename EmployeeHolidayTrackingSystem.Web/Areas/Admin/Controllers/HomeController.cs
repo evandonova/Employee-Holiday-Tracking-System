@@ -27,12 +27,13 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
         {
             var model = new AdminProfileViewModel()
             {
-                FullName = this.users.GetUserFullName(this.User.Id()),
-                Supervisors = this.supervisors.GetAll().Select(s => new SupervisorViewModel
-                {
-                    Id = s.Id,
-                    FullName = this.users.GetUserFullName(s.UserId)
-                })
+                FullName = this.users.GetUserFullName(this.User.Id()!),
+                Supervisors = this.supervisors.GetAll()
+                    .Select(s => new SupervisorViewModel
+                    {
+                        Id = s.Id,
+                        FullName = s.FullName
+                    })
             };
 
             return View(model);

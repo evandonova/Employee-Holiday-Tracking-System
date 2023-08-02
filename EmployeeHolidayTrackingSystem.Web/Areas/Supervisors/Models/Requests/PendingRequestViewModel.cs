@@ -1,7 +1,10 @@
-﻿namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests
 {
     public class PendingRequestViewModel : PendingRequestBaseModel
     {
-        public string EmployeeFullName { get; init; } = null!;
+        [Display (Name = "Employee Full Name")]
+        public string? EmployeeFullName { get; init; }
     }
 }

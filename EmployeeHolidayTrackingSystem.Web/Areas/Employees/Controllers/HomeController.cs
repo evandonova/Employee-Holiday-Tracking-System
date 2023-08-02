@@ -1,13 +1,11 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
-using EmployeeHolidayTrackingSystem.Data;
+using EmployeeHolidayTrackingSystem.Services.Requests;
+using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models;
 using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
-using EmployeeHolidayTrackingSystem.Services.Employees;
-using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
-using static EmployeeHolidayTrackingSystem.Web.Constants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
@@ -16,45 +14,60 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
     [Authorize(Roles = EmployeeRoleName)]
     public class HomeController : Controller
     {
+        private readonly IRequestService requests;
         private readonly IEmployeeService employees;
-        private readonly IRequestStatusService statuses;
 
-        public HomeController(IEmployeeService employees, IRequestStatusService statuses)
+        public HomeController(IRequestService requests, IEmployeeService employees)
         {
+            this.requests = requests;
             this.employees = employees;
-            this.statuses = statuses;
         }
 
         public IActionResult Index()
         {
-            var employee = employees.GetEmployeeByUserId(this.User.Id());
+            var employee = this.employees.GetEmployeeProfileData(this.User.Id());
 
-            var holidayRequests = employee.HolidayRequests
-                    .Select(hr => new RequestViewModel
-                    {
-                        Id = hr.Id,
-                        StartDate = hr.StartDate.ToString(DateFormat),
-                        EndDate = hr.EndDate.ToString(DateFormat),
-                        Status = statuses.GetStatusTitleById(hr.StatusId) ?? "Pending"
-                    })
-                    .ToList();
+            var pendingRequests = this.requests.GetPendingEmployeeRequests(employee?.Id)
+                .Select(r => new RequestViewModel()
+                {
+                    Id = r.Id,
+                    StartDate = r.StartDate,
+                    EndDate = r.EndDate,
+                    Status = r.Status
+                })
+                .ToList();
 
-            var supervisor = employee.Supervisor;
+            var approvedRequests = this.requests.GetApprovedEmployeeRequests(employee?.Id)
+                .Select(r => new RequestViewModel()
+                {
+                    Id = r.Id,
+                    StartDate = r.StartDate,
+                    EndDate = r.EndDate,
+                    Status = r.Status
+                })
+                .ToList();
 
-            var employeeModel = new EmployeeProfileViewModel()
+            var disapprovedRequests = this.requests.GetDisapprovedEmployeeRequests(employee?.Id)
+                .Select(r => new RequestViewModel()
+                {
+                    Id = r.Id,
+                    StartDate = r.StartDate,
+                    EndDate = r.EndDate,
+                    Status = r.Status
+                })
+                .ToList();
+
+            var model = new EmployeeProfileViewModel()
             {
-                FullName = $"{employee.User.FirstName} {employee.User.LastName}",
-                SupervisorName = $"{supervisor.User.FirstName} {supervisor.User.LastName}",
-                HolidayDaysRemaining = employee.HolidayDaysRemaining,
-                PendingHolidayRequests = holidayRequests
-                    .Where(h => h.Status == RequestStatusEnum.Pending.ToString()),
-                ApprovedHolidayRequests = holidayRequests
-                    .Where(h => h.Status == RequestStatusEnum.Approved.ToString()),
-                DisapprovedHolidayRequests = holidayRequests
-                    .Where(h => h.Status == RequestStatusEnum.Disapproved.ToString()),
+                FullName = employee?.FullName,
+                SupervisorName = employee?.SupervisorName,
+                HolidayDaysRemaining = employee?.HolidayDaysRemaining ?? 0,
+                PendingHolidayRequests = pendingRequests,
+                ApprovedHolidayRequests = approvedRequests,
+                DisapprovedHolidayRequests = disapprovedRequests
             };
 
-            return View(employeeModel);
+            return View(model);
         }
     }
 }

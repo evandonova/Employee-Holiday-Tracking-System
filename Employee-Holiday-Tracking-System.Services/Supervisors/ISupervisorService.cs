@@ -1,14 +1,20 @@
-﻿using EmployeeHolidayTrackingSystem.Data.Models;
+﻿using EmployeeHolidayTrackingSystem.Services.Supervisors.Models;
 
 namespace EmployeeHolidayTrackingSystem.Services.Supervisors
 {
     public interface ISupervisorService
     {
-        public Supervisor? GetSupervisorById(Guid id);
+        public string? GetSupervisorFullName(Guid? supervisorId);
 
-        public Supervisor? GetSupervisorByUserId(string? userId);
+        public Guid GetSupervisorIdByUserId(string userId);
 
-        public List<Supervisor> GetAll();
+        public SupervisorDetailsServiceModel? GetDetails(Guid id);
+
+        public bool SupervisorExists(Guid id);
+
+        public string? GetSupervisorEmail(Guid id);
+
+        public List<SupervisorServiceModel> GetAll();
 
         public void CreateSupervisor(string firstName, string lastName,
             string email, string password, string employeeRoleName);
