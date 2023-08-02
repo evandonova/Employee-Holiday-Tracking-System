@@ -1,4 +1,5 @@
-﻿using EmployeeHolidayTrackingSystem.Data;
+﻿using System.Globalization;
+using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Services.Requests.Models;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
@@ -80,8 +81,8 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
                 .Select(h => new RequestServiceModel()
                 {
                     Id = h.Id,
-                    StartDate = h.StartDate.ToString(DateFormat),
-                    EndDate = h.EndDate.ToString(DateFormat),
+                    StartDate = h.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
+                    EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
                     Status = h.Status.Title
                 })
                 .ToList();
@@ -93,8 +94,8 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
                 .Select(h => new RequestServiceModel()
                 {
                     Id = h.Id,
-                    StartDate = h.StartDate.ToString(DateFormat),
-                    EndDate = h.EndDate.ToString(DateFormat),
+                    StartDate = h.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
+                    EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
                     Status = h.Status.Title
                 })
                 .ToList();
@@ -106,8 +107,8 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
                     .Select(h => new RequestServiceModel()
                     {
                         Id = h.Id,
-                        StartDate = h.StartDate.ToString(DateFormat),
-                        EndDate = h.EndDate.ToString(DateFormat),
+                        StartDate = h.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
+                        EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
                         Status = h.Status.Title
                     })
                     .ToList();
@@ -118,8 +119,8 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
                  .Select(r => new RequestServiceModel()
                  {
                      Id = r.Id,
-                     StartDate = r.StartDate.ToString(DateFormat),
-                     EndDate = r.EndDate.ToString(DateFormat),
+                     StartDate = r.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
+                     EndDate = r.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
                      DisapprovalStatement = r.DisapprovalStatement,
                      Status = r.Status.Title,
                      EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}"
@@ -136,8 +137,8 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             {
                 Id = r.Id,
                 EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}",
-                StartDate = r.StartDate.ToString(DateFormat),
-                EndDate = r.EndDate.ToString(DateFormat)
+                StartDate = r.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
+                EndDate = r.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture)
             })
             .ToList();
 

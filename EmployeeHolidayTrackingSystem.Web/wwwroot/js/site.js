@@ -157,7 +157,7 @@ function createCalendar(date, side, startDateAsText, endDateAsText) {
     }
 
     function getTodaysTitle() {
-        return "Today is " + currentDate.toLocaleString("en-US", {
+        return "Today is " + todaysDate.toLocaleString("en-US", {
             weekday: "long",
             day: "numeric",
             month: "short"

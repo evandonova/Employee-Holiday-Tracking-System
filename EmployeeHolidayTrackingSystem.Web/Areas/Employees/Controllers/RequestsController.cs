@@ -9,6 +9,7 @@ using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
 using static EmployeeHolidayTrackingSystem.Data.DataConstants.HolidayRequest;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
+using System.Globalization;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 {
@@ -55,8 +56,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
             var model = new RequestFormModel()
             {
-                StartDate = dateToday.ToString(DateFormat),
-                EndDate = dateToday.ToString(DateFormat)
+                StartDate = dateToday.ToString(DateFormat, CultureInfo.InvariantCulture),
+                EndDate = dateToday.ToString(DateFormat, CultureInfo.InvariantCulture)
             };
 
             return View(model);
