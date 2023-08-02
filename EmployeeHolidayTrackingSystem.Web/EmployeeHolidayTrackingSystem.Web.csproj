@@ -23,4 +23,8 @@
     <ProjectReference Include="..\Employee-Holiday-Tracking-System.Services\EmployeeHolidayTrackingSystem.Services.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Areas\Admin\" />
+  </ItemGroup>
+
 </Project>

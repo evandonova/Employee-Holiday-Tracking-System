@@ -1,6 +1,4 @@
-﻿using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
-
-namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
+﻿namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
 {
     public static class EndpointExtensions
     {
@@ -15,7 +13,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Infrastructure
         public static void MapDefaultAreaRoute(this IEndpointRouteBuilder endpoints)
         {
             endpoints.MapControllerRoute(
-                name: EmployeesAreaName,
+                name: "Areas",
                 pattern: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
         }
     }
