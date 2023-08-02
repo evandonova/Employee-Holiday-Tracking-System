@@ -8,6 +8,7 @@ using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 using EmployeeHolidayTrackingSystem.Services.Supervisors;
+using Microsoft.AspNetCore.Mvc;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,7 +33,10 @@ builder.Services
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<EmployeeHolidayDbContext>();
 
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews(options =>
+{
+    options.Filters.Add<AutoValidateAntiforgeryTokenAttribute>();
+});
 
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IRequestService, RequestService>();
