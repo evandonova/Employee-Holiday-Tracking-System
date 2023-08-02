@@ -11,14 +11,17 @@ namespace EmployeeHolidayTrackingSystem.Web.Controllers
     {
         public IActionResult Index()
         {
-            if (this.User.IsInRole(EmployeeRoleName))
+            if(this.User?.Identity?.IsAuthenticated == true)
             {
-                return RedirectToAction("Index", "Home", new { area = EmployeesAreaName });
-            }
+                if (this.User.IsInRole(EmployeeRoleName))
+                {
+                    return RedirectToAction("Index", "Home", new { area = EmployeesAreaName });
+                }
 
-            if (this.User.IsInRole(SupervisorRoleName))
-            {
-                return RedirectToAction("Index", "Home", new { area = SupervisorsAreaName });
+                if (this.User.IsInRole(SupervisorRoleName))
+                {
+                    return RedirectToAction("Index", "Home", new { area = SupervisorsAreaName });
+                }
             }
 
             return View();
