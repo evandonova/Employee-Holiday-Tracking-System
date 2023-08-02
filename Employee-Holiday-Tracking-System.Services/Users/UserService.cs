@@ -11,6 +11,56 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
         public UserService(EmployeeHolidayDbContext data)
             => this.data = data;
 
+        public string CreateUser(string firstName, string lastName, string email, string password)
+        {
+            var newUser = new User()
+            {
+                FirstName = firstName,
+                LastName = lastName,
+                Email = email,
+                NormalizedEmail = email.ToUpper(),
+                UserName = email,
+                NormalizedUserName = email.ToUpper(),
+            };
+
+            var hasher = new PasswordHasher<User>();
+            newUser.PasswordHash = hasher.HashPassword(newUser, password);
+
+            this.data.Users.Add(newUser);
+            this.data.SaveChanges();
+
+            return newUser.Id;
+        }
+
+        public bool UserWithEmailExists(string email)
+            => this.data.Users.Any(u => u.Email == email);
+
+        public void AddUserToRole(string userId, string roleName)
+        {
+            var user = this.data.Users.Find(userId);
+
+            if (user is null)
+            {
+                return;
+            }
+
+            var role = this.data.Roles.FirstOrDefault(r => r.Name == roleName);
+
+            if (role is null)
+            {
+                return;
+            }
+
+            var userInRole = new IdentityUserRole<string>()
+            {
+                UserId = userId,
+                RoleId = role.Id
+            };
+
+            this.data.UserRoles.Add(userInRole);
+            this.data.SaveChanges();
+        }
+
         public void UpdatePassword(string id, string newPassword)
         {
             var user = this.data.Users.FirstOrDefault(x => x.Id == id);

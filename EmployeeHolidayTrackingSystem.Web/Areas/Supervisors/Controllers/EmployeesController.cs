@@ -1,9 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
+using EmployeeHolidayTrackingSystem.Services.Supervisors;
+using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
+using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
 {
@@ -11,10 +15,40 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
     [Authorize(Roles = SupervisorRoleName)]
     public class EmployeesController : Controller
     {
+        private readonly IUserService users;
         private readonly IEmployeeService employees;
+        private readonly ISupervisorService supervisors;
 
-        public EmployeesController(IEmployeeService employees)
-            => this.employees = employees;
+        public EmployeesController(IUserService users, IEmployeeService employees, ISupervisorService supervisors)
+        {
+            this.users = users;
+            this.employees = employees;
+            this.supervisors = supervisors;
+        }
+
+        public IActionResult Add() => View(new EmployeeFormModel());
+
+        [HttpPost]
+        public IActionResult Add(EmployeeFormModel model)
+        {
+            if(this.users.UserWithEmailExists(model.Email!))
+            {
+                ModelState.AddModelError(nameof(model.Email),
+                    "User with with email already exists.");
+            }
+
+            if (!this.ModelState.IsValid)
+            {
+                return View(model);
+            }
+
+            var supervisorId = this.supervisors.GetSupervisorByUserId(this.User.Id()).Id;
+
+            this.employees.CreateEmployee(model.FirstName!, model.LastName!, 
+                model.Email!, model.Password!, supervisorId, EmployeeRoleName);
+
+            return RedirectToAction(nameof(HomeController.Index), "Home");
+        }
 
         public IActionResult Details(Guid id)
         {
@@ -47,9 +81,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return BadRequest();
             }
 
+            if (model.Email != employee.User.Email && this.users.UserWithEmailExists(model.Email!))
+            {
+                ModelState.AddModelError(nameof(model.Email),
+                    "User with with email already exists.");
+            }
+
             if (!this.ModelState.IsValid)
             {
-                return this.View("Details", model);
+                return View("Details", model);
             }
 
             this.employees.EditEmployee(model.Id, model.FirstName, model.LastName, model.Email, model.NewPassword);

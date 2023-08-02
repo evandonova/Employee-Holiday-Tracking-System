@@ -4,6 +4,8 @@ using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 
+using static EmployeeHolidayTrackingSystem.Data.DataConstants.Employee;
+
 namespace EmployeeHolidayTrackingSystem.Services.Employees
 {
     public class EmployeeService : IEmployeeService
@@ -45,6 +47,24 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
         {
             var employee = this.data.Employees.Find(id);
             return employee?.HolidayDaysRemaining > days;
+        }
+
+        public void CreateEmployee(string firstName, string lastName, 
+            string email, string password, Guid supervisorId, string employeeRoleName)
+        {
+            var newUserId = this.users.CreateUser(firstName, lastName, email, password);
+
+            this.users.AddUserToRole(newUserId, employeeRoleName);
+
+            var newEmployee = new Employee()
+            {
+                HolidayDaysRemaining = InitialHolidayDaysCount,
+                UserId = newUserId,
+                SupervisorId = supervisorId
+            };
+
+            this.data.Employees.Add(newEmployee);
+            this.data.SaveChanges();
         }
 
         public void SubtractEmployeeHolidayDays(Guid id, int days)

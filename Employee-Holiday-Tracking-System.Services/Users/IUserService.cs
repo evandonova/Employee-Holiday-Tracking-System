@@ -2,6 +2,12 @@
 {
     public interface IUserService
     {
+        public string CreateUser(string firstName, string lastName, string email, string password);
+
+        public bool UserWithEmailExists(string email);
+
+        public void AddUserToRole(string userId, string roleName);
+
         public void UpdatePassword(string id, string newPassword);
 
         public void UpdateEmail(string id, string newEmail);

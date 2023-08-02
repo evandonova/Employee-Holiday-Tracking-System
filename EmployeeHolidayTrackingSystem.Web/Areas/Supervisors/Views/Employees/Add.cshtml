@@ -1,0 +1,36 @@
+﻿@model EmployeeFormModel
+
+@{
+    ViewData["Title"] = "Add Employee";
+}
+
+<form method="post">
+
+    <h4>Add New Employee</h4>
+
+    <label asp-for="FirstName"></label>
+    <input asp-for="FirstName" class="form-control col-1" placeholder="First name">
+    <span asp-validation-for="FirstName" class="small text-danger"></span>
+
+    <label asp-for="LastName"></label>
+    <input asp-for="LastName" class="form-control col-1" placeholder="Last name">
+    <span asp-validation-for="LastName" class="small text-danger"></span>
+
+    <label asp-for="Email"></label>
+    <input asp-for="Email" class="form-control col-1" placeholder="Email">
+    <span asp-validation-for="Email" class="small text-danger"></span>
+
+    <label asp-for="Password"></label>
+    <input asp-for="Password" class="form-control col-1" type="password" placeholder="Password">
+    <span asp-validation-for="Password" class="small text-danger"></span>
+
+    <label asp-for="ConfirmPassword"></label>
+    <input asp-for="ConfirmPassword" class="form-control col-1" type="password" placeholder="Confirm New Password">
+    <span asp-validation-for="ConfirmPassword" class="small text-danger"></span>
+
+    <input class="btn btn-primary" type="submit" value="Add Employee" />
+</form>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
