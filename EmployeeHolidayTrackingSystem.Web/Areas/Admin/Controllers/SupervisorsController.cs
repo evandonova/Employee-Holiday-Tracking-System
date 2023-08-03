@@ -3,11 +3,10 @@ using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Supervisors;
-using EmployeeHolidayTrackingSystem.Web.Areas.Admin.Models.Supervisors;
+using EmployeeHolidayTrackingSystem.Web.Areas.Shared.Models;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Admin.AdminConstants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
-using EmployeeHolidayTrackingSystem.Web.Areas.Shared.Models;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
 {
@@ -57,7 +56,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
 
             var supervisor = await this.supervisors.GetSupervisorDetailsAsync(id);
 
-            var model = new SupervisorDetailsFormModel()
+            var model = new UserDetailsBaseFormModel()
             {
                 Id = supervisor.Id,
                 FirstName = supervisor.FirstName,
@@ -69,7 +68,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(SupervisorDetailsFormModel model)
+        public async Task<IActionResult> Edit(UserDetailsBaseFormModel model)
         {
             if (!await this.supervisors.SupervisorExistsAsync(model.Id))
             {
@@ -94,7 +93,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(SupervisorDetailsFormModel model)
+        public async Task<IActionResult> Delete(UserDetailsBaseFormModel model)
         {
             if (!await this.supervisors.SupervisorExistsAsync(model.Id))
             {

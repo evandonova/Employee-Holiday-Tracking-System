@@ -2,17 +2,17 @@
 
 using static EmployeeHolidayTrackingSystem.Data.DataConstants.User;
 
-namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Models.Supervisors
+namespace EmployeeHolidayTrackingSystem.Web.Areas.Shared.Models
 {
-    public class SupervisorDetailsFormModel
+    public class UserBaseFormModel
     {
-        public string Id { get; init; } = null!;
-
         [Required]
+        [Display(Name = "First Name")]
         [StringLength(FirstNameMaxLength, MinimumLength = FirstNameMinLength)]
         public string FirstName { get; init; } = null!;
 
         [Required]
+        [Display(Name = "Last Name")]
         [StringLength(LastNameMaxLength, MinimumLength = LastNameMinLength)]
         public string LastName { get; init; } = null!;
 
@@ -21,14 +21,5 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Models.Supervisors
         [Display(Name = "Email")]
         [StringLength(EmailMaxLength, MinimumLength = EmailMinLength)]
         public string Email { get; init; } = null!;
-
-        [DataType(DataType.Password)]
-        [StringLength(PasswordMaxLength, MinimumLength = PasswordMinLength)]
-        public string? NewPassword { get; init; }
-
-        [DataType(DataType.Password)]
-        [Display(Name = "Confirm password")]
-        [Compare("NewPassword", ErrorMessage = "The password and confirmation password do not match.")]
-        public string? ConfirmPassword { get; init; }
     }
 }

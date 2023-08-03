@@ -2,15 +2,9 @@
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests
 {
-    public class RequestViewModel
+    public class RequestViewModel : RequestFormModel
     {
         public string Id { get; init; } = null!;
-
-        [Display(Name = "Start Date")]
-        public string StartDate { get; init; } = null!;
-
-        [Display(Name = "End Date")]
-        public string EndDate { get; init; } = null!;
 
         public string Status { get; init; } = null!;
     }

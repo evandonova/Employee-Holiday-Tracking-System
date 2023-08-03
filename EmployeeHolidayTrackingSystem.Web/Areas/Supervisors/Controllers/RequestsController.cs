@@ -87,7 +87,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         {
             var model = new DisapprovedRequestFormModel()
             {
-                RequestId = id,
+                Id = id,
                 Statement = string.Empty
             }; 
 
@@ -102,12 +102,12 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View(model);
             }
 
-            if (!await this.requests.RequestExistsAsync(model.RequestId))
+            if (!await this.requests.RequestExistsAsync(model.Id))
             {
                 return BadRequest();
             }
 
-            await this.requests.UpdateDisapprovedRequestAsync(model.RequestId, model.Statement);
+            await this.requests.UpdateDisapprovedRequestAsync(model.Id, model.Statement);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

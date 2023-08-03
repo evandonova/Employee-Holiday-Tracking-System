@@ -6,7 +6,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests
 {
     public class DisapprovedRequestFormModel
     {
-        public string RequestId { get; init; } = null!;
+        public string Id { get; init; } = null!;
 
         [Required]
         [StringLength(DisapprovalStatementMaxLength, MinimumLength = DisapprovalStatementMinLength)]

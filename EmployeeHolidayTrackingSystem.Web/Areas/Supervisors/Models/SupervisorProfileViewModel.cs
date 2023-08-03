@@ -1,5 +1,5 @@
-﻿using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
-using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests;
+﻿using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests;
+using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models
 {
