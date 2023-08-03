@@ -21,101 +21,94 @@ namespace EmployeeHolidayTrackingSystem.Services.Supervisors
             this.employees = employees;
         }
 
-        public string? GetSupervisorFullName(Guid? supervisorId)
-            => this.data.Supervisors
-                .Where(s => s.Id == supervisorId)
+        public async Task<string> GetSupervisorIdByUserIdAsync(string userId)
+        {
+            var supervisor = await this.data.Supervisors.FirstAsync(s => s.UserId == userId);
+            return supervisor.Id.ToString();
+        }
+
+        public async Task<string> GetSupervisorFullNameAsync(string supervisorId)
+            => await this.data.Supervisors
+                .Where(s => s.Id.ToString() == supervisorId)
                 .Select(s => $"{s.User.FirstName} {s.User.LastName}")
-                .FirstOrDefault();
+                .FirstAsync();
 
-        public Guid GetSupervisorIdByUserId(string userId)
-            => this.data.Supervisors.FirstOrDefault(s => s.UserId == userId)!.Id;
+        public async Task<bool> SupervisorExistsAsync(string supervisorId)
+            => await this.data.Supervisors.AnyAsync(s => s.Id.ToString() == supervisorId);
 
-        public List<SupervisorServiceModel> GetAll()
-            => this.data.Supervisors
-            .Select(s => new SupervisorServiceModel()
-            {
-                Id = s.Id,
-                FullName = $"{s.User.FirstName} {s.User.LastName}"
-            })
-            .ToList();
-
-        public SupervisorDetailsServiceModel? GetDetails(Guid id)
-            => this.data.Supervisors
-            .Where(s => s.Id == id)
-            .Select(s => new SupervisorDetailsServiceModel()
-            {
-                Id = s.Id,
-                FirstName = s.User.FirstName,
-                LastName = s.User.LastName,
-                Email = s.User.Email
-            })
-            .FirstOrDefault();
-
-        public bool SupervisorExists(Guid id)
-            => this.data.Supervisors.Any(s => s.Id == id);
-
-        public string? GetSupervisorEmail(Guid id)
-           => this.data.Supervisors
-              .Where(s => s.Id == id)
+        public async Task<string> GetSupervisorEmailAsync(string supervisorId)
+           => await this.data.Supervisors
+              .Where(s => s.Id.ToString() == supervisorId)
               .Select(s => s.User.Email)
-              .FirstOrDefault();
+              .FirstAsync();
 
-        public void CreateSupervisor(string firstName, string lastName,
+        public async Task<SupervisorDetailsServiceModel> GetSupervisorDetailsAsync(string supervisorId)
+            => await this.data.Supervisors
+                .Where(s => s.Id.ToString() == supervisorId)
+                .Select(s => new SupervisorDetailsServiceModel()
+                {
+                    Id = s.Id.ToString(),
+                    FirstName = s.User.FirstName,
+                    LastName = s.User.LastName,
+                    Email = s.User.Email
+                })
+                .FirstAsync();
+
+        public async Task<List<SupervisorServiceModel>> GetAllSupervisorsAsync()
+            => await this.data.Supervisors
+                .Select(s => new SupervisorServiceModel()
+                {
+                    Id = s.Id.ToString(),
+                    FullName = $"{s.User.FirstName} {s.User.LastName}"
+                })
+                .ToListAsync();
+
+        public async Task CreateSupervisorAsync(string firstName, string lastName,
             string email, string password, string supervisorRoleName)
         {
-            var newUserId = this.users.CreateUser(firstName, lastName, email, password);
+            var newUserId = await this.users.CreateUserAndReturnIdAsync(firstName, lastName, email, password);
 
-            this.users.AddUserToRole(newUserId, supervisorRoleName);
+            await this.users.AddUserToRoleAsync(newUserId, supervisorRoleName);
 
             var newSupervisor = new Supervisor()
             {
                 UserId = newUserId
             };
 
-            this.data.Supervisors.Add(newSupervisor);
-            this.data.SaveChanges();
+            await this.data.Supervisors.AddAsync(newSupervisor);
+            await this.data.SaveChangesAsync();
         }
 
-        public void EditSupervisor(Guid id, string firstName, string lastName,
+        public async Task EditSupervisorAsync(string id, string firstName, string lastName,
             string email, string? newPassword)
         {
-            var supervisor = this.data.Employees
+            var supervisor = await this.data.Employees
                 .Include(s => s.User)
-                .FirstOrDefault(s => s.Id == id);
-
-            if (supervisor is null)
-            {
-                return;
-            }
+                .FirstAsync(s => s.Id.ToString() == id);
 
             supervisor.User.FirstName = firstName;
             supervisor.User.LastName = lastName;
 
-            this.users.UpdateEmail(supervisor.UserId, email);
+            await this.users.UpdateEmailAsync(supervisor.UserId, email);
 
-            if (newPassword is not null)
+            if(newPassword is not null)
             {
-                this.users.UpdatePassword(supervisor.UserId, newPassword);
+                await this.users.UpdatePasswordAsync(supervisor.UserId, newPassword);
             }
 
-            this.data.SaveChanges();
+            await this.data.SaveChangesAsync();
         }
 
-        public void DeleteSupervisor(Guid id)
+        public async Task DeleteSupervisorAsync(string supervisorId)
         {
-            var supervisor = this.data.Supervisors.Find(id);
+            var supervisor = await this.data.Supervisors.FirstAsync(s => s.Id.ToString() == supervisorId);
 
-            if (supervisor is null)
-            {
-                return;
-            }
-
-            this.employees.DeleteSupervisorEmployees(supervisor.Id);
+            await this.employees.DeleteEmployeesBySupervisorIdAsync(supervisor.Id.ToString());
 
             this.data.Supervisors.Remove(supervisor);
-            this.data.SaveChanges();
+            await this.data.SaveChangesAsync();
 
-            this.users.DeleteUser(supervisor.UserId);
+            await this.users.DeleteUserAsync(supervisor.UserId);
         }
     }
 }

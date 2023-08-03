@@ -2,7 +2,7 @@
 {
     public class SupervisorServiceModel
     {
-        public Guid Id { get; init; }
+        public string Id { get; init; } = null!;
 
         public string FullName { get; init; } = null!;
     }

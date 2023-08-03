@@ -2,18 +2,18 @@
 {
     public interface IUserService
     {
-        public string CreateUser(string firstName, string lastName, string email, string password);
+        public Task<string> CreateUserAndReturnIdAsync(string firstName, string lastName, string email, string password);
 
-        public string GetUserFullName(string id);
+        public Task<string> GetUserFullNameAsync(string userId);
 
-        public bool UserWithEmailExists(string email);
+        public Task<bool> UserWithEmailExistsAsync(string email);
 
-        public void AddUserToRole(string userId, string roleName);
+        public Task AddUserToRoleAsync(string userId, string roleName);
 
-        public void UpdatePassword(string id, string newPassword);
+        public Task UpdatePasswordAsync(string id, string newPassword);
 
-        public void UpdateEmail(string id, string newEmail);
+        public Task UpdateEmailAsync(string id, string newEmail);
 
-        public void DeleteUser(string id);
+        public Task DeleteUserAsync(string id);
     }
 }

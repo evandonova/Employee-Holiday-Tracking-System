@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Globalization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models;
@@ -9,7 +10,6 @@ using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
 
 using static EmployeeHolidayTrackingSystem.Data.DataConstants.HolidayRequest;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
-using System.Globalization;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 {
@@ -29,18 +29,18 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
             this.statuses = statuses;
         }
 
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(string id)
         {
-            if (!this.requests.RequestExists(id))
+            if (!await this.requests.RequestExistsAsync(id))
             {
                 return BadRequest();
             }
 
-            var request = this.requests.GetRequestDetails(id);
+            var request = await this.requests.GetRequestDetailsAsync(id);
 
             var model = new EmployeeRequestViewModel()
             {
-                Id = request!.Id,
+                Id = request.Id,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
                 Status = request.Status,
@@ -64,7 +64,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
         }
 
         [HttpPost]
-        public IActionResult Create(RequestFormModel requestModel)
+        public async Task<IActionResult> Create(RequestFormModel requestModel)
         {
             var startDate = DateTime.Parse(requestModel.StartDate);
             var endDate = DateTime.Parse(requestModel.EndDate);
@@ -84,18 +84,18 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
             var holidayDaySpan = endDate.Subtract(startDate);
             var holidayDaysCount = holidayDaySpan.Days + 1;
 
-            var employeeId = this.employees.GetEmployeeIdByUserId(this.User.Id()!);
+            var employeeId = await this.employees.GetEmployeeIdByUserIdAsync(this.User.Id()!);
 
             // If employee requests more days than they have remaining
-            if (!this.employees.CheckIfEmployeeHasEnoughHolidayDays(employeeId, holidayDaysCount))
+            if (!await this.employees.CheckIfEmployeeHasEnoughHolidayDaysAsync(employeeId, holidayDaysCount))
             {
                 TempData["message"] = "You try to request more holiday days than you have remaining.";
                 return View(requestModel);
             }
 
-            var supervisorId = this.employees.GetEmployeeSupervisorId(employeeId);
+            var supervisorId = await this.employees.GetEmployeeSupervisorIdAsync(employeeId);
 
-            this.requests.Create(startDate, endDate, employeeId, supervisorId);
+            await this.requests.CreateAsync(startDate, endDate, employeeId, supervisorId);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

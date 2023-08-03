@@ -2,15 +2,15 @@
 {
     public class RequestServiceModel
     {
-        public Guid Id { get; init; }
+        public string Id { get; init; } = null!;
 
-        public string? StartDate { get; init; }
+        public string StartDate { get; init; } = null!;
 
-        public string? EndDate { get; init; }
+        public string EndDate { get; init; } = null!;
 
-        public string? Status { get; init; }
+        public string Status { get; init; } = null!;
 
-        public string? EmployeeFullName { get; init; }
+        public string EmployeeFullName { get; init; } = null!;
 
         public string? DisapprovalStatement { get; init; }
     }

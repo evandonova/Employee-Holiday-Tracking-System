@@ -20,7 +20,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         private readonly IEmployeeService employees;
         private readonly ISupervisorService supervisors;
 
-        public EmployeesController(IUserService users, IEmployeeService employees, ISupervisorService supervisors)
+        public EmployeesController(IUserService users, IEmployeeService employees, 
+            ISupervisorService supervisors)
         {
             this.users = users;
             this.employees = employees;
@@ -30,9 +31,9 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         public IActionResult Add() => View(new UserFormModel());
 
         [HttpPost]
-        public IActionResult Add(UserFormModel model)
+        public async Task<IActionResult> Add(UserFormModel model)
         {
-            if(this.users.UserWithEmailExists(model.Email!))
+            if(await this.users.UserWithEmailExistsAsync(model.Email))
             {
                 ModelState.AddModelError(nameof(model.Email),
                     "User with this email already exists.");
@@ -43,22 +44,22 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View(model);
             }
 
-            var supervisorId = this.supervisors.GetSupervisorIdByUserId(this.User.Id()!);
+            var supervisorId = await this.supervisors.GetSupervisorIdByUserIdAsync(this.User.Id()!);
 
-            this.employees.CreateEmployee(model.FirstName!, model.LastName!, 
-                model.Email!, model.Password!, supervisorId, EmployeeRoleName);
+            await this.employees.CreateEmployeeAsync(model.FirstName, model.LastName, 
+                model.Email, model.Password, supervisorId, EmployeeRoleName);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(string id)
         {
-            if (!this.employees.EmployeeExists(id))
+            if (!await this.employees.EmployeeExistsAsync(id))
             {
                 return BadRequest();
             }
 
-            var employeeData = this.employees.GetEmployeeDetails(id);
+            var employeeData = await this.employees.GetEmployeeDetailsAsync(id);
 
             var model = new EmployeeDetailsFormModel()
             {
@@ -73,14 +74,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(EmployeeDetailsFormModel model)
+        public async Task<IActionResult> Edit(EmployeeDetailsFormModel model)
         {
-            if (!this.employees.EmployeeExists(model.Id))
+            if (!await this.employees.EmployeeExistsAsync(model.Id))
             {
                 return BadRequest();
             }
 
-            if (model.Email != this.employees.GetEmployeeEmail(model.Id) && this.users.UserWithEmailExists(model.Email!))
+            if (model.Email != await this.employees.GetEmployeeEmailAsync(model.Id) 
+                && await this.users.UserWithEmailExistsAsync(model.Email))
             {
                 ModelState.AddModelError(nameof(model.Email),
                     "User with this email already exists.");
@@ -91,20 +93,21 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View("Details", model);
             }
 
-            this.employees.EditEmployee(model.Id, model.FirstName!, model.LastName!, model.Email!, model.NewPassword);
+            await this.employees.EditEmployeeAsync(model.Id, model.FirstName, 
+                model.LastName, model.Email, model.NewPassword);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [HttpPost]
-        public IActionResult Delete(EmployeeDetailsFormModel model)
+        public async Task<IActionResult> Delete(EmployeeDetailsFormModel model)
         {
-            if (!this.employees.EmployeeExists(model.Id))
+            if (!await this.employees.EmployeeExistsAsync(model.Id))
             {
                 return BadRequest();
             }
 
-            this.employees.DeleteEmployee(model.Id);
+            await this.employees.DeleteEmployeeAsync(model.Id);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

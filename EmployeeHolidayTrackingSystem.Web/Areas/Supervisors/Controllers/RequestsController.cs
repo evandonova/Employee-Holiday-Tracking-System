@@ -26,16 +26,16 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             this.statuses = statuses;
         }
 
-        public IActionResult Respond(Guid id)
+        public async Task<IActionResult> Respond(string id)
         {
-            if(!this.requests.RequestExists(id))
+            if(!await this.requests.RequestExistsAsync(id))
             {
                 return BadRequest();
             }
 
-            var request = this.requests.GetRequestDetails(id);
+            var request = await this.requests.GetRequestDetailsAsync(id);
 
-            var employeeId = this.requests.GetRequestEmployeeId(request!.Id);
+            var employeeId = await this.requests.GetRequestEmployeeIdAsync(request.Id);
 
             var model = new PendingRequestDetailsViewModel()
             {
@@ -45,8 +45,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 Employee = new EmployeeExtendedViewModel()
                 {
                     Id = employeeId,
-                    FullName = this.employees.GetEmployeeFullName(employeeId),
-                    HolidayDaysRemaining = this.employees.GetEmployeeHolidayDaysRemaining(employeeId) ?? 0
+                    FullName = await this.employees.GetEmployeeFullNameAsync(employeeId),
+                    HolidayDaysRemaining = await this.employees.GetEmployeeHolidayDaysRemainingAsync(employeeId)
                 }
             };
 
@@ -54,9 +54,9 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         }
 
         [HttpPost]
-        public IActionResult Approve(PendingRequestDetailsViewModel model)
+        public async Task<IActionResult> Approve(PendingRequestDetailsViewModel model)
         {
-            if (!this.requests.RequestExists(model.Id))
+            if (!await this.requests.RequestExistsAsync(model.Id))
             {
                 return BadRequest();
             }
@@ -67,23 +67,23 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             var holidayDaySpan = endDate.Subtract(startDate);
             var holidayDaysCount = holidayDaySpan.Days + 1;
 
-            var employeeId = this.requests.GetRequestEmployeeId(model.Id);
+            var employeeId = await this.requests.GetRequestEmployeeIdAsync(model.Id);
 
             // If employee requests more days than they have remaining
-            if (!this.employees.CheckIfEmployeeHasEnoughHolidayDays(employeeId, holidayDaysCount))
+            if (!await this.employees.CheckIfEmployeeHasEnoughHolidayDaysAsync(employeeId, holidayDaysCount))
             {
                 TempData["message"] = "The Employee has less holiday days remaining than requested. You cannot approve their request.";
                 return View("~/Areas/Supervisors/Views/Requests/Respond.cshtml", model);
             }
 
-            this.requests.UpdateRequestToApproved(model.Id);
+            await this.requests.UpdateRequestToApprovedAsync(model.Id);
 
-            this.employees.SubtractEmployeeHolidayDays(employeeId, holidayDaysCount);
+            await this.employees.SubtractEmployeeHolidayDaysAsync(employeeId, holidayDaysCount);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        public IActionResult Disapprove(Guid id)
+        public IActionResult Disapprove(string id)
         {
             var model = new DisapprovedRequestFormModel()
             {
@@ -95,19 +95,19 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         }
 
         [HttpPost]
-        public IActionResult Disapprove(DisapprovedRequestFormModel model)
+        public async Task<IActionResult> Disapprove(DisapprovedRequestFormModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            if (!this.requests.RequestExists(model.RequestId))
+            if (!await this.requests.RequestExistsAsync(model.RequestId))
             {
                 return BadRequest();
             }
 
-            this.requests.UpdateDisapprovedRequest(model.RequestId, model.Statement);
+            await this.requests.UpdateDisapprovedRequestAsync(model.RequestId, model.Statement);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

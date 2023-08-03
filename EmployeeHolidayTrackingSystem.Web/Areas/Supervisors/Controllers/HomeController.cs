@@ -20,7 +20,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         private readonly ISupervisorService supervisors;
         private readonly IRequestService requests;
 
-        public HomeController(IEmployeeService employees, 
+        public HomeController(IEmployeeService employees,
             ISupervisorService supervisors, IRequestService requests)
         {
             this.employees = employees;
@@ -28,31 +28,33 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             this.requests = requests;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
-            var supervisorId = this.supervisors.GetSupervisorIdByUserId(this.User.Id()!);
+            var supervisorId = await this.supervisors.GetSupervisorIdByUserIdAsync(this.User.Id()!);
 
-            var employees = this.employees.GetSupervisorEmployees(supervisorId)
+            var employees = await this.employees.GetSupervisorEmployeesAsync(supervisorId);
+
+            var employeesModel = employees
                 .Select(e => new EmployeeViewModel()
                 {
                     Id = e.Id,
                     FullName = e.FullName,
                 }).ToList();
 
-            var requests = this.requests.GetPendingSupervisorRequests(supervisorId)
-                .Select(r => new PendingRequestViewModel()
-                {
-                    Id = r.Id,
-                    StartDate = r.StartDate,
-                    EndDate = r.EndDate,
-                    EmployeeFullName = r.EmployeeFullName
-                });
+            var requests = await this.requests.GetPendingSupervisorRequestsAsync(supervisorId);
+            var requestsModel = requests.Select(r => new PendingRequestViewModel()
+            {
+                Id = r.Id,
+                StartDate = r.StartDate,
+                EndDate = r.EndDate,
+                EmployeeFullName = r.EmployeeFullName
+            });
 
             var model = new SupervisorProfileViewModel()
             {
-                FullName = this.supervisors.GetSupervisorFullName(supervisorId),
-                Employees = employees,
-                PendingRequests = requests
+                FullName = await this.supervisors.GetSupervisorFullNameAsync(supervisorId),
+                Employees = employeesModel,
+                PendingRequests = requestsModel
             };
 
             return View(model);

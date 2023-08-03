@@ -6,13 +6,13 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models
     public class EmployeeProfileViewModel
     {
         [Display(Name = "Full Name")]
-        public string? FullName { get; init; }
+        public string FullName { get; init; } = null!;
 
         [Display(Name = "Holiday Days Remaining")]
         public int HolidayDaysRemaining { get; init; }
 
         [Display(Name = "Supervisor Name")]
-        public string? SupervisorName { get; init; }
+        public string SupervisorName { get; init; } = null!;
 
         public IEnumerable<RequestViewModel> PendingHolidayRequests { get; init; }
             = new List<RequestViewModel>();

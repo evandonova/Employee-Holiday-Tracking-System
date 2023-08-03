@@ -4,26 +4,22 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
 {
     public interface IRequestService
     {
-        public bool RequestExists(Guid id);
+        public Task<string> GetRequestEmployeeIdAsync(string requestId);
 
-        public void Create(DateTime startDate, DateTime endDate, Guid employeeId, Guid supervisorId);
+        public Task<bool> RequestExistsAsync(string requestId);
 
-        public void UpdateRequestToApproved(Guid requestId);
+        public Task CreateAsync(DateTime startDate, DateTime endDate, string employeeId, string supervisorId);
 
-        public void UpdateDisapprovedRequest(Guid requestId, string statement);
+        public Task UpdateRequestToApprovedAsync(string requestId);
 
-        public void DeleteEmployeeRequests(Guid employeeId);
+        public Task UpdateDisapprovedRequestAsync(string requestId, string statement);
 
-        public List<RequestServiceModel> GetPendingEmployeeRequests(Guid? employeeId);
+        public Task DeleteEmployeeRequestsAsync(string employeeId);
 
-        public List<RequestServiceModel> GetApprovedEmployeeRequests(Guid? employeeId);
+        public Task<RequestServiceModel> GetRequestDetailsAsync(string requestId);
 
-        public List<RequestServiceModel> GetDisapprovedEmployeeRequests(Guid? employeeId);
+        public Task<List<RequestServiceModel>> GetEmployeeRequestsAsync(string employeeId);
 
-        public RequestServiceModel? GetRequestDetails(Guid id);
-
-        public Guid GetRequestEmployeeId(Guid id);
-
-        public List<RequestServiceModel> GetPendingSupervisorRequests(Guid? supervisorId);
+        public Task<List<RequestServiceModel>> GetPendingSupervisorRequestsAsync(string supervisorId);
     }
 }

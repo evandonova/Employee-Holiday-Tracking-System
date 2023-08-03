@@ -1,31 +1,34 @@
-﻿using EmployeeHolidayTrackingSystem.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using EmployeeHolidayTrackingSystem.Data;
 
 namespace EmployeeHolidayTrackingSystem.Services.RequestStatuses
 {
     public class RequestStatusService : IRequestStatusService
     {
-
         private readonly EmployeeHolidayDbContext data;
 
         public RequestStatusService(EmployeeHolidayDbContext data)
             => this.data = data;
 
-        public string? GetStatusTitleById(int statusId)
-            => this.data.HolidayRequestStatuses.Find(statusId)?.Title;
+        public async Task<int> GetPendingStatusIdAsync()
+        {
+            var status = await this.data.HolidayRequestStatuses
+                    .FirstAsync(s => s.Title == RequestStatusEnum.Pending.ToString());
+            return status.Id;
+        }
 
-        public int GetPendingStatusId()
-            => this.data.HolidayRequestStatuses
-                    .FirstOrDefault(s => s.Title == RequestStatusEnum.Pending.ToString())!
-                    .Id;
+        public async Task<int> GetApprovedStatusIdAsync()
+        {
+            var status = await this.data.HolidayRequestStatuses
+                    .FirstAsync(s => s.Title == RequestStatusEnum.Approved.ToString());
+            return status.Id;
+        }
 
-        public int GetApprovedStatusId()
-            => this.data.HolidayRequestStatuses
-                    .FirstOrDefault(s => s.Title == RequestStatusEnum.Approved.ToString())!
-                    .Id;
-
-        public int GetDisapprovedStatusId()
-            => this.data.HolidayRequestStatuses
-                    .FirstOrDefault(s => s.Title == RequestStatusEnum.Disapproved.ToString())!
-                    .Id;
+        public async Task<int> GetDisapprovedStatusIdAsync()
+        {
+            var status = await this.data.HolidayRequestStatuses
+                    .FirstAsync(s => s.Title == RequestStatusEnum.Disapproved.ToString());
+            return status.Id;
+        }
     }
 }

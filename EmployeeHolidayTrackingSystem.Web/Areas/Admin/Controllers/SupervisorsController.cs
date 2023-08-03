@@ -29,9 +29,9 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
         public IActionResult Add() => View(new UserFormModel());
 
         [HttpPost]
-        public IActionResult Add(UserFormModel model)
+        public async Task<IActionResult> Add(UserFormModel model)
         {
-            if (this.users.UserWithEmailExists(model.Email!))
+            if (await this.users.UserWithEmailExistsAsync(model.Email!))
             {
                 ModelState.AddModelError(nameof(model.Email),
                     "User with this email already exists.");
@@ -42,24 +42,24 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            this.supervisors.CreateSupervisor(model.FirstName!, model.LastName!,
-                model.Email!, model.Password!, SupervisorRoleName);
+            await this.supervisors.CreateSupervisorAsync(model.FirstName, model.LastName,
+                model.Email, model.Password, SupervisorRoleName);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        public IActionResult Details(Guid id)
+        public async Task<IActionResult> Details(string id)
         {
-            if (!this.supervisors.SupervisorExists(id))
+            if (!await this.supervisors.SupervisorExistsAsync(id))
             {
                 return BadRequest();
             }
 
-            var supervisor = this.supervisors.GetDetails(id);
+            var supervisor = await this.supervisors.GetSupervisorDetailsAsync(id);
 
             var model = new SupervisorDetailsFormModel()
             {
-                Id = supervisor!.Id,
+                Id = supervisor.Id,
                 FirstName = supervisor.FirstName,
                 LastName = supervisor.LastName,
                 Email = supervisor.Email
@@ -69,14 +69,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public IActionResult Edit(SupervisorDetailsFormModel model)
+        public async Task<IActionResult> Edit(SupervisorDetailsFormModel model)
         {
-            if (!this.supervisors.SupervisorExists(model.Id))
+            if (!await this.supervisors.SupervisorExistsAsync(model.Id))
             {
                 return BadRequest();
             }
 
-            if (model.Email != this.supervisors.GetSupervisorEmail(model.Id) && this.users.UserWithEmailExists(model.Email!))
+            if (model.Email != await this.supervisors.GetSupervisorEmailAsync(model.Id) 
+                && await this.users.UserWithEmailExistsAsync(model.Email))
             {
                 ModelState.AddModelError(nameof(model.Email),
                     "User with this email already exists.");
@@ -87,20 +88,20 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
                 return View("Details", model);
             }
 
-            this.supervisors.EditSupervisor(model.Id, model.FirstName!, model.LastName!, model.Email!, model.NewPassword);
+            await this.supervisors.EditSupervisorAsync(model.Id, model.FirstName, model.LastName, model.Email, model.NewPassword);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [HttpPost]
-        public IActionResult Delete(SupervisorDetailsFormModel model)
+        public async Task<IActionResult> Delete(SupervisorDetailsFormModel model)
         {
-            if (!this.supervisors.SupervisorExists(model.Id))
+            if (!await this.supervisors.SupervisorExistsAsync(model.Id))
             {
                 return BadRequest();
             }
 
-            this.supervisors.DeleteSupervisor(model.Id);
+            await this.supervisors.DeleteSupervisorAsync(model.Id);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

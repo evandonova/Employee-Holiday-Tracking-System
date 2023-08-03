@@ -1,40 +1,39 @@
-﻿using EmployeeHolidayTrackingSystem.Data.Models;
-using EmployeeHolidayTrackingSystem.Services.Employees.Models;
+﻿using EmployeeHolidayTrackingSystem.Services.Employees.Models;
 
 namespace EmployeeHolidayTrackingSystem.Services.Employees
 {
     public interface IEmployeeService
     {
-        public Guid GetEmployeeIdByUserId(string userId);
+        public Task<string> GetEmployeeIdByUserIdAsync(string userId);
 
-        public bool EmployeeExists(Guid id);
+        public Task<bool> EmployeeExistsAsync(string employeeId);
 
-        public string? GetEmployeeEmail(Guid id);
+        public Task<string> GetEmployeeEmailAsync(string employeeId);
 
-        public string GetEmployeeFullName(Guid id);
+        public Task<string> GetEmployeeFullNameAsync(string employeeId);
 
-        public EmployeeDetailsServiceModel GetEmployeeDetails(Guid id);
+        public Task<string> GetEmployeeSupervisorIdAsync(string employeeId);
 
-        public Guid GetEmployeeSupervisorId(Guid employeeId);
+        public Task<int> GetEmployeeHolidayDaysRemainingAsync(string employeeId);
 
-        public List<EmployeeServiceModel> GetSupervisorEmployees(Guid? supervisorId);
+        public Task<bool> CheckIfEmployeeHasEnoughHolidayDaysAsync(string employeeId, int days);
 
-        public int? GetEmployeeHolidayDaysRemaining(Guid id);
+        public Task<EmployeeServiceModel> GetEmployeeProfileDataAsync(string userId);
 
-        public bool CheckIfEmployeeHasEnoughHolidayDays(Guid? id, int days);
+        public Task<EmployeeDetailsServiceModel> GetEmployeeDetailsAsync(string employeeId);
 
-        public void CreateEmployee(string firstName, string lastName,
-            string email, string password, Guid supervisorId, string employeeRoleName);
+        public Task<List<EmployeeServiceModel>> GetSupervisorEmployeesAsync(string supervisorId);
 
-        public void SubtractEmployeeHolidayDays(Guid id, int days);
+        public Task CreateEmployeeAsync(string firstName, string lastName,
+            string email, string password, string supervisorId, string employeeRoleName);
 
-        public void EditEmployee(Guid id, string firstName, string lastName, 
+        public Task SubtractEmployeeHolidayDaysAsync(string supervisorId, int days);
+
+        public Task EditEmployeeAsync(string employeeId, string firstName, string lastName, 
             string email, string? newPassword);
 
-        public void DeleteEmployee(Guid id);
+        public Task DeleteEmployeeAsync(string employeeId);
 
-        public void DeleteSupervisorEmployees(Guid supervisorId);
-
-        public EmployeeServiceModel? GetEmployeeProfileData(string? userId);
+        public Task DeleteEmployeesBySupervisorIdAsync(string supervisorId);
     }
 }

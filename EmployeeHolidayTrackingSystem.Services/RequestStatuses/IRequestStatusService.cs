@@ -2,12 +2,10 @@
 {
     public interface IRequestStatusService
     {
-        public string? GetStatusTitleById(int statusId);
+        public Task<int> GetPendingStatusIdAsync();
 
-        public int GetPendingStatusId();
+        public Task<int> GetApprovedStatusIdAsync();
 
-        public int GetApprovedStatusId();
-
-        public int GetDisapprovedStatusId();
+        public Task<int> GetDisapprovedStatusIdAsync();
     }
 }

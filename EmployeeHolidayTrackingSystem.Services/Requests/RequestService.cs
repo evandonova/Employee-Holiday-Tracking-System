@@ -1,4 +1,5 @@
 ﻿using System.Globalization;
+using Microsoft.EntityFrameworkCore;
 using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Services.Requests.Models;
@@ -19,130 +20,96 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             this.statuses = statuses;
         }
 
+        public async Task<string> GetRequestEmployeeIdAsync(string requestId)
+        {
+            var request = await this.data.HolidayRequests.FirstAsync(r => r.Id.ToString() == requestId);
+            return request.EmployeeId.ToString();
+        }
 
-        public bool RequestExists(Guid id)
-            => this.data.HolidayRequests.Find(id) is not null;
+        public async Task<bool> RequestExistsAsync(string requestId)
+            => await this.data.HolidayRequests.AnyAsync(r => r.Id.ToString() == requestId);
 
-        public void Create(DateTime startDate, DateTime endDate, Guid employeeId, Guid supervisorId)
+        public async Task CreateAsync(DateTime startDate, DateTime endDate, string employeeId, string supervisorId)
         {
             var request = new HolidayRequest()
             {
                 StartDate = startDate,
                 EndDate = endDate,
-                StatusId = this.statuses.GetPendingStatusId(),
-                EmployeeId = employeeId,
-                SupervisorId = supervisorId,
+                StatusId = await this.statuses.GetPendingStatusIdAsync(),
+                EmployeeId = Guid.Parse(employeeId),
+                SupervisorId = Guid.Parse(supervisorId),
             };
 
-            data.HolidayRequests.Add(request);
-            data.SaveChanges();
+            await this.data.HolidayRequests.AddAsync(request);
+            await this.data.SaveChangesAsync();
         }
 
-        public void UpdateRequestToApproved(Guid requestId)
+        public async Task UpdateRequestToApprovedAsync(string requestId)
         {
-            var request = this.GetRequestById(requestId);
+            var request = await this.data.HolidayRequests.FirstAsync(r => r.Id.ToString() == requestId);
 
-            if (request is null)
-            {
-                return;
-            }
+            request.StatusId = await this.statuses.GetApprovedStatusIdAsync();
 
-            request.StatusId = this.statuses.GetApprovedStatusId();
-            data.SaveChanges();
+            await this.data.SaveChangesAsync();
         }
 
-        public void UpdateDisapprovedRequest(Guid requestId, string statement)
+        public async Task UpdateDisapprovedRequestAsync(string requestId, string statement)
         {
-            var request = this.GetRequestById(requestId);
+            var request = await this.data.HolidayRequests.FirstAsync(r => r.Id.ToString() == requestId);
 
-            if (request is null)
-            {
-                return;
-            }
-
-            request.StatusId = this.statuses.GetDisapprovedStatusId();
+            request.StatusId = await this.statuses.GetDisapprovedStatusIdAsync();
             request.DisapprovalStatement = statement;
 
-            data.SaveChanges();
+            await this.data.SaveChangesAsync();
         }
 
-        public void DeleteEmployeeRequests(Guid employeeId)
+        public async Task DeleteEmployeeRequestsAsync(string employeeId)
         {
-            var requests = this.data.HolidayRequests.Where(r => r.EmployeeId == employeeId);
+            var requests = await this.data.HolidayRequests
+                .Where(r => r.EmployeeId.ToString() == employeeId)
+                .ToListAsync();
 
             this.data.HolidayRequests.RemoveRange(requests);
-            this.data.SaveChanges();
+            await this.data.SaveChangesAsync();
         }
 
-        public List<RequestServiceModel> GetPendingEmployeeRequests(Guid? employeeId)
-            => this.data.HolidayRequests
-                .Where(h => h.EmployeeId == employeeId &&
-                    h.Status.Title == RequestStatusEnum.Pending.ToString())
-                .Select(h => new RequestServiceModel()
-                {
-                    Id = h.Id,
-                    StartDate = h.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                    EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                    Status = h.Status.Title
-                })
-                .ToList();
-
-        public List<RequestServiceModel> GetApprovedEmployeeRequests(Guid? employeeId)
-        => this.data.HolidayRequests
-                .Where(h => h.EmployeeId == employeeId &&
-                    h.Status.Title == RequestStatusEnum.Approved.ToString())
-                .Select(h => new RequestServiceModel()
-                {
-                    Id = h.Id,
-                    StartDate = h.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                    EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                    Status = h.Status.Title
-                })
-                .ToList();
-
-        public List<RequestServiceModel> GetDisapprovedEmployeeRequests(Guid? employeeId)
-            => this.data.HolidayRequests
-                    .Where(h => h.EmployeeId == employeeId &&
-                        h.Status.Title == RequestStatusEnum.Disapproved.ToString())
-                    .Select(h => new RequestServiceModel()
-                    {
-                        Id = h.Id,
-                        StartDate = h.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                        EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                        Status = h.Status.Title
-                    })
-                    .ToList();
-
-        public RequestServiceModel? GetRequestDetails(Guid id)
-            => this.data.HolidayRequests
-                 .Where(r => r.Id == id)
+        public async Task<RequestServiceModel> GetRequestDetailsAsync(string requestId)
+            => await this.data.HolidayRequests
+                 .Where(r => r.Id.ToString() == requestId)
                  .Select(r => new RequestServiceModel()
                  {
-                     Id = r.Id,
+                     Id = r.Id.ToString(),
                      StartDate = r.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
                      EndDate = r.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
                      DisapprovalStatement = r.DisapprovalStatement,
                      Status = r.Status.Title,
                      EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}"
                  })
-                .FirstOrDefault();
+                .FirstAsync();
 
-        public Guid GetRequestEmployeeId(Guid id)
-            => this.data.HolidayRequests.Find(id)!.EmployeeId;
+        public async Task<List<RequestServiceModel>> GetEmployeeRequestsAsync(string employeeId)
+            => await this.data.HolidayRequests
+                .Where(h => h.EmployeeId.ToString() == employeeId)
+                .Select(h => new RequestServiceModel()
+                {
+                    Id = h.Id.ToString(),
+                    StartDate = h.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
+                    EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
+                    Status = h.Status.Title
+                })
+                .ToListAsync();
 
-        public List<RequestServiceModel> GetPendingSupervisorRequests(Guid? supervisorId)
-            => this.data.HolidayRequests
-            .Where(r => r.SupervisorId == supervisorId && r.Status.Title == RequestStatusEnum.Pending.ToString())
-            .Select(r => new RequestServiceModel()
-            {
-                Id = r.Id,
-                EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}",
-                StartDate = r.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                EndDate = r.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture)
-            })
-            .ToList();
-
-        private HolidayRequest? GetRequestById(Guid id)
-            => this.data.HolidayRequests.Find(id);
+        public async Task<List<RequestServiceModel>> GetPendingSupervisorRequestsAsync(string supervisorId)
+            => await this.data.HolidayRequests
+                .Where(r => r.SupervisorId.ToString() == supervisorId 
+                    && r.Status.Title == RequestStatusEnum.Pending.ToString())
+                .Select(r => new RequestServiceModel()
+                {
+                    Id = r.Id.ToString(),
+                    EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}",
+                    StartDate = r.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
+                    EndDate = r.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture)
+                })
+                .ToListAsync();
     }
 }

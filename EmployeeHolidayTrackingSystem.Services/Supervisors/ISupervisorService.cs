@@ -4,24 +4,24 @@ namespace EmployeeHolidayTrackingSystem.Services.Supervisors
 {
     public interface ISupervisorService
     {
-        public string? GetSupervisorFullName(Guid? supervisorId);
+        public Task<string> GetSupervisorIdByUserIdAsync(string userId);
 
-        public Guid GetSupervisorIdByUserId(string userId);
+        public Task<string> GetSupervisorFullNameAsync(string supervisorId);
 
-        public SupervisorDetailsServiceModel? GetDetails(Guid id);
+        public Task<bool> SupervisorExistsAsync(string supervisorId);
 
-        public bool SupervisorExists(Guid id);
+        public Task<string> GetSupervisorEmailAsync(string supervisorId);
 
-        public string? GetSupervisorEmail(Guid id);
+        public Task<SupervisorDetailsServiceModel> GetSupervisorDetailsAsync(string supervisorId);
 
-        public List<SupervisorServiceModel> GetAll();
+        public Task<List<SupervisorServiceModel>> GetAllSupervisorsAsync();
 
-        public void CreateSupervisor(string firstName, string lastName,
+        public Task CreateSupervisorAsync(string firstName, string lastName,
             string email, string password, string employeeRoleName);
 
-        public void EditSupervisor(Guid id, string firstName, string lastName,
+        public Task EditSupervisorAsync(string id, string firstName, string lastName,
             string email, string? newPassword);
 
-        public void DeleteSupervisor(Guid id);
+        public Task DeleteSupervisorAsync(string id);
     }
 }

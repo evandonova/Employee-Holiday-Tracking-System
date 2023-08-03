@@ -23,17 +23,18 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
             this.users = users;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
+            var supervisors = await this.supervisors.GetAllSupervisorsAsync();
+
             var model = new AdminProfileViewModel()
             {
-                FullName = this.users.GetUserFullName(this.User.Id()!),
-                Supervisors = this.supervisors.GetAll()
-                    .Select(s => new SupervisorViewModel
-                    {
-                        Id = s.Id,
-                        FullName = s.FullName
-                    })
+                FullName = await this.users.GetUserFullNameAsync(this.User.Id()!),
+                Supervisors = supervisors.Select(s => new SupervisorViewModel
+                {
+                    Id = s.Id,
+                    FullName = s.FullName
+                })
             };
 
             return View(model);

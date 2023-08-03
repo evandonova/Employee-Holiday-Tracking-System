@@ -4,9 +4,9 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees
 {
     public class EmployeeViewModel
     {
-        public Guid? Id { get; init; }
+        public string Id { get; init; } = null!;
 
         [Display(Name = "Full Name")]
-        public string? FullName { get; init; }
+        public string FullName { get; init; } = null!;
     }
 }

@@ -2,12 +2,12 @@
 {
     public class EmployeeServiceModel
     {
-        public Guid Id { get; init; }
+        public string Id { get; init; } = null!;
 
-        public string? FullName { get; init; }
+        public string FullName { get; init; } = null!;
 
         public int HolidayDaysRemaining { get; init; }
 
-        public string? SupervisorName { get; init; }
+        public string SupervisorName { get; init; } = null!;
     }
 }

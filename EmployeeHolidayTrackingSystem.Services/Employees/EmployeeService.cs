@@ -23,168 +23,157 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             this.requests = requests;
         }
 
-        public Guid GetEmployeeIdByUserId(string userId)
-            => this.data.Employees.FirstOrDefault(e => e.UserId == userId)!.Id;
+        public async Task<string> GetEmployeeIdByUserIdAsync(string userId)
+        {
+            var employee = await this.data.Employees.FirstAsync(e => e.UserId == userId);
+            return employee.Id.ToString();
+        }
 
-        public bool EmployeeExists(Guid id)
-            => this.data.Employees.Any(e => e.Id == id);
+        public async Task<bool> EmployeeExistsAsync(string employeeId)
+            => await this.data.Employees.AnyAsync(e => e.Id.ToString() == employeeId);
 
-        public string? GetEmployeeEmail(Guid id)
-            => this.data.Employees
-               .Where(e => e.Id == id)
+        public async Task<string> GetEmployeeEmailAsync(string employeeId)
+            => await this.data.Employees
+               .Where(e => e.Id.ToString() == employeeId)
                .Select(e => e.User.Email)
-               .FirstOrDefault();
+               .FirstAsync();
 
-        public EmployeeDetailsServiceModel GetEmployeeDetails(Guid id)
-            => this.data.Employees
-                .Where(e => e.Id == id)
+        public async Task<string> GetEmployeeFullNameAsync(string employeeId)
+            => await this.data.Employees.Include(e => e.User)
+                .Where(e => e.Id.ToString() == employeeId)
+                .Select(e => $"{e.User.FirstName} {e.User.LastName}")
+                .FirstAsync();
+
+        public async Task<string> GetEmployeeSupervisorIdAsync(string employeeId)
+        {
+            var employee = await this.data.Employees.FirstAsync(e => e.Id.ToString() == employeeId);
+            return employee.SupervisorId.ToString();
+        }
+
+        public async Task<int> GetEmployeeHolidayDaysRemainingAsync(string employeeId)
+        {
+            var employee = await this.data.Employees.FirstAsync(e => e.Id.ToString() == employeeId);
+            return employee.HolidayDaysRemaining;
+        }
+
+        public async Task<bool> CheckIfEmployeeHasEnoughHolidayDaysAsync(string employeeId, int days)
+        {
+            var employee = await this.data.Employees.FirstAsync(e => e.Id.ToString() == employeeId);
+            return employee.HolidayDaysRemaining > days;
+        }
+
+        public async Task<EmployeeServiceModel> GetEmployeeProfileDataAsync(string userId)
+            => await this.data.Employees
+                .Where(e => e.UserId == userId)
+                .Select(e => new EmployeeServiceModel()
+                {
+                    Id = e.Id.ToString(),
+                    FullName = $"{e.User.FirstName} {e.User.LastName}",
+                    SupervisorName = $"{e.Supervisor.User.FirstName} {e.Supervisor.User.LastName}",
+                    HolidayDaysRemaining = e.HolidayDaysRemaining
+                })
+                .FirstAsync();
+
+        public async Task<EmployeeDetailsServiceModel> GetEmployeeDetailsAsync(string employeeId)
+            => await this.data.Employees
+                .Where(e => e.Id.ToString() == employeeId)
                 .Select(e => new EmployeeDetailsServiceModel()
                 {
-                    Id = e.Id,
+                    Id = e.Id.ToString(),
                     FirstName = e.User.FirstName,
                     LastName = e.User.LastName,
                     Email = e.User.Email,
                     HolidayDaysRemaining = e.HolidayDaysRemaining
                 })
-                .FirstOrDefault()!;
+                .FirstAsync();
 
-        public List<EmployeeServiceModel> GetSupervisorEmployees(Guid? supervisorId)
-            => this.data.Employees
-                .Where(e => e.SupervisorId == supervisorId)
+        public async Task<List<EmployeeServiceModel>> GetSupervisorEmployeesAsync(string supervisorId)
+            => await this.data.Employees
+                .Where(e => e.SupervisorId.ToString() == supervisorId)
                 .Select(e => new EmployeeServiceModel()
                 {
-                    Id = e.Id,
+                    Id = e.Id.ToString(),
                     FullName = $"{e.User.FirstName} {e.User.LastName}",
                 })
-                .ToList();
+                .ToListAsync();
 
-        public string GetEmployeeFullName(Guid id)
+        public async Task CreateEmployeeAsync(string firstName, string lastName,
+            string email, string password, string supervisorId, string employeeRoleName)
         {
-            var employee = this.data.Employees.Include(e => e.User).FirstOrDefault(e => e.Id == id);
-            return $"{employee?.User.FirstName} {employee?.User.LastName}" ?? string.Empty;
-        }
+            var newUserId = await this.users.CreateUserAndReturnIdAsync(firstName, lastName, email, password);
 
-        public Guid GetEmployeeSupervisorId(Guid employeeId)
-            => this.data.Employees.FirstOrDefault(e => e.Id == employeeId)!.SupervisorId;
-
-        public int? GetEmployeeHolidayDaysRemaining(Guid id)
-            => this.data.Employees.Find(id)?.HolidayDaysRemaining;
-
-        public bool CheckIfEmployeeHasEnoughHolidayDays(Guid? id, int days)
-        {
-            var employee = this.data.Employees.Find(id);
-            return employee?.HolidayDaysRemaining > days;
-        }
-
-        public void CreateEmployee(string firstName, string lastName,
-            string email, string password, Guid supervisorId, string employeeRoleName)
-        {
-            var newUserId = this.users.CreateUser(firstName, lastName, email, password);
-
-            this.users.AddUserToRole(newUserId, employeeRoleName);
+            await this.users.AddUserToRoleAsync(newUserId, employeeRoleName);
 
             var newEmployee = new Employee()
             {
                 HolidayDaysRemaining = InitialHolidayDaysCount,
                 UserId = newUserId,
-                SupervisorId = supervisorId
+                SupervisorId = Guid.Parse(supervisorId)
             };
 
-            this.data.Employees.Add(newEmployee);
-            this.data.SaveChanges();
+            await this.data.Employees.AddAsync(newEmployee);
+            await this.data.SaveChangesAsync();
         }
 
-        public void SubtractEmployeeHolidayDays(Guid id, int days)
+        public async Task SubtractEmployeeHolidayDaysAsync(string employeeId, int days)
         {
-            var employee = this.data.Employees.Find(id);
-
-            if (employee is null)
-            {
-                return;
-            }
+            var employee = await this.data.Employees.FirstAsync(e => e.Id.ToString() == employeeId);
 
             employee.HolidayDaysRemaining -= days;
-            this.data.SaveChanges();
+            await this.data.SaveChangesAsync();
         }
 
-        public void EditEmployee(Guid id, string firstName, string lastName,
+        public async Task EditEmployeeAsync(string employeeId, string firstName, string lastName,
             string email, string? newPassword)
         {
-            var employee = this.data.Employees
+            var employee = await this.data.Employees
                 .Include(e => e.User)
-                .FirstOrDefault(e => e.Id == id);
-
-            if (employee is null)
-            {
-                return;
-            }
+                .FirstAsync(e => e.Id.ToString() == employeeId);
 
             employee.User.FirstName = firstName;
             employee.User.LastName = lastName;
 
-            this.users.UpdateEmail(employee.UserId, email);
+            await this.users.UpdateEmailAsync(employee.UserId, email);
 
             if (newPassword is not null)
             {
-                this.users.UpdatePassword(employee.UserId, newPassword);
+                await this.users.UpdatePasswordAsync(employee.UserId, newPassword);
             }
 
-            this.data.SaveChanges();
+            await this.data.SaveChangesAsync();
         }
 
-        public void DeleteEmployee(Guid id)
+        public async Task DeleteEmployeeAsync(string employeeId)
         {
-            var employee = this.data.Employees.Find(id);
+            var employee = await this.data.Employees.FirstAsync(e => e.Id.ToString() == employeeId);
 
-            if (employee is null)
-            {
-                return;
-            }
-
-            this.requests.DeleteEmployeeRequests(employee.Id);
+            await this.requests.DeleteEmployeeRequestsAsync(employee.Id.ToString());
 
             this.data.Employees.Remove(employee);
-            this.data.SaveChanges();
+            await this.data.SaveChangesAsync();
 
-            this.users.DeleteUser(employee.UserId);
+            await this.users.DeleteUserAsync(employee.UserId);
         }
 
-        public void DeleteSupervisorEmployees(Guid supervisorId)
+        public async Task DeleteEmployeesBySupervisorIdAsync(string supervisorId)
         {
-            var supervisor = this.data.Supervisors.Include(s => s.Employees)
-                .FirstOrDefault(s => s.Id == supervisorId);
-
-            if (supervisor is null)
-            {
-                return;
-            }
+            var supervisor = await this.data.Supervisors.Include(s => s.Employees)
+                .FirstAsync(s => s.Id.ToString() == supervisorId);
 
             foreach (var employee in supervisor.Employees)
             {
-                this.requests.DeleteEmployeeRequests(employee.Id);
+                await this.requests.DeleteEmployeeRequestsAsync(employee.Id.ToString());
             }
 
             var employeeUserIds = supervisor.Employees.Select(e => e.UserId).ToList();
 
             this.data.Employees.RemoveRange(supervisor.Employees);
-            this.data.SaveChanges();
+            await this.data.SaveChangesAsync();
 
             foreach (var userId in employeeUserIds)
             {
-                this.users.DeleteUser(userId);
+                await this.users.DeleteUserAsync(userId);
             }
         }
-
-        public EmployeeServiceModel? GetEmployeeProfileData(string? userId)
-            => this.data.Employees
-                .Where(e => e.UserId == userId)
-                .Select(e => new EmployeeServiceModel()
-                {
-                    Id = e.Id,
-                    FullName = $"{e.User.FirstName} {e.User.LastName}",
-                    SupervisorName = $"{e.Supervisor.User.FirstName} {e.Supervisor.User.LastName}",
-                    HolidayDaysRemaining = e.HolidayDaysRemaining
-                })
-                .FirstOrDefault();
     }
 }
