@@ -2,7 +2,7 @@
 
 using static EmployeeHolidayTrackingSystem.Data.DataConstants.User;
 
-namespace EmployeeHolidayTrackingSystem.Web.Models.Users
+namespace EmployeeHolidayTrackingSystem.Web.Areas.Shared.Models
 {
     public class UserFormModel
     {

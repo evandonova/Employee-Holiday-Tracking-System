@@ -3,11 +3,11 @@ using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Supervisors;
-using EmployeeHolidayTrackingSystem.Web.Models.Users;
 using EmployeeHolidayTrackingSystem.Web.Areas.Admin.Models.Supervisors;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Admin.AdminConstants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
+using EmployeeHolidayTrackingSystem.Web.Areas.Shared.Models;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
 {
