@@ -82,7 +82,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Supervisors
         public async Task EditSupervisorAsync(string id, string firstName, string lastName,
             string email, string? newPassword)
         {
-            var supervisor = await this.data.Employees
+            var supervisor = await this.data.Supervisors
                 .Include(s => s.User)
                 .FirstAsync(s => s.Id.ToString() == id);
 
