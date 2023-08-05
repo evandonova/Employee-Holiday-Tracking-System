@@ -2,7 +2,6 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
-using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models;
 using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
@@ -21,7 +20,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
         private readonly IEmployeeService employees;
         private readonly IRequestStatusService statuses;
 
-        public RequestsController(IRequestService requests, 
+        public RequestsController(IRequestService requests,
             IEmployeeService employees, IRequestStatusService statuses)
         {
             this.requests = requests;
@@ -43,8 +42,22 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                 Id = request.Id,
                 StartDate = request.StartDate,
                 EndDate = request.EndDate,
-                Status = request.Status,
-                DisapprovalStatement = request.DisapprovalStatement
+                Status = Task
+                            .Run(async () =>
+                            {
+                                return await this.requests
+                                    .GetRequestStatusTitleAsync(request.Id);
+                            })
+                           .GetAwaiter()
+                           .GetResult(),
+                DisapprovalStatement = Task
+                                        .Run(async () =>
+                                        {
+                                            return await this.requests
+                                                .GetDisapprovalStatementAsync(request.Id);
+                                        })
+                                       .GetAwaiter()
+                                       .GetResult()
             };
 
             return View(model);

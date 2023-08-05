@@ -20,14 +20,40 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             this.statuses = statuses;
         }
 
+        public async Task<bool> RequestExistsAsync(string requestId)
+            => await this.data.HolidayRequests.AnyAsync(r => r.Id.ToString() == requestId);
+
         public async Task<string> GetRequestEmployeeIdAsync(string requestId)
         {
             var request = await this.data.HolidayRequests.FirstAsync(r => r.Id.ToString() == requestId);
             return request.EmployeeId.ToString();
         }
 
-        public async Task<bool> RequestExistsAsync(string requestId)
-            => await this.data.HolidayRequests.AnyAsync(r => r.Id.ToString() == requestId);
+        public async Task<string> GetRequestStatusTitleAsync(string requestId)
+        {
+            var request = await this.data.HolidayRequests
+                .Include(r => r.Status)
+                .FirstAsync(r => r.Id.ToString() == requestId);
+
+            return request.Status.Title;
+        }
+
+        public async Task<string> GetRequestEmployeeFullNameAsync(string requestId)
+        {
+            var request = await this.data.HolidayRequests
+                .Include(r => r.Employee.User)
+                .FirstAsync(r => r.Id.ToString() == requestId);
+
+            return $"{request.Employee.User.FirstName} {request.Employee.User.LastName}";
+        }
+
+        public async Task<string?> GetDisapprovalStatementAsync(string requestId)
+        {
+            var request = await this.data.HolidayRequests
+                .FirstAsync(r => r.Id.ToString() == requestId);
+
+            return request.DisapprovalStatement;
+        }
 
         public async Task CreateAsync(DateTime startDate, DateTime endDate, string employeeId, string supervisorId)
         {
@@ -80,10 +106,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
                  {
                      Id = r.Id.ToString(),
                      StartDate = r.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                     EndDate = r.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                     DisapprovalStatement = r.DisapprovalStatement,
-                     Status = r.Status.Title,
-                     EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}"
+                     EndDate = r.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture)
                  })
                 .FirstAsync();
 
@@ -94,8 +117,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
                 {
                     Id = h.Id.ToString(),
                     StartDate = h.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                    EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture),
-                    Status = h.Status.Title
+                    EndDate = h.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture)
                 })
                 .ToListAsync();
 
@@ -106,7 +128,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
                 .Select(r => new RequestServiceModel()
                 {
                     Id = r.Id.ToString(),
-                    EmployeeFullName = $"{r.Employee.User.FirstName} {r.Employee.User.LastName}",
                     StartDate = r.StartDate.ToString(DateFormat, CultureInfo.InvariantCulture),
                     EndDate = r.EndDate.ToString(DateFormat, CultureInfo.InvariantCulture)
                 })

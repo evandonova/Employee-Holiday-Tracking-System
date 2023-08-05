@@ -47,7 +47,13 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 Id = r.Id,
                 StartDate = r.StartDate,
                 EndDate = r.EndDate,
-                EmployeeFullName = r.EmployeeFullName
+                EmployeeFullName = Task.Run(async () =>
+                                    {
+                                        return await this.requests
+                                            .GetRequestEmployeeFullNameAsync(r.Id);
+                                    })
+                                   .GetAwaiter()
+                                   .GetResult()
             });
 
             var model = new SupervisorProfileViewModel()

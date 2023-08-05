@@ -36,7 +36,13 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                             Id = r.Id,
                             StartDate = r.StartDate,
                             EndDate = r.EndDate,
-                            Status = r.Status
+                            Status = Task.Run(async () =>
+                                        {
+                                            return await this.requests
+                                                .GetRequestStatusTitleAsync(r.Id);
+                                        })
+                                       .GetAwaiter()
+                                       .GetResult()
                         })
                         .ToList();
 
