@@ -4,10 +4,10 @@
     ViewData["Title"] = "Respond to Request";
 }
 
-@if (TempData["message"] != null)
+@if (TempData["ViewMessage"] != null)
 {
     <div class="alert alert-danger" role="alert">
-        @TempData["message"]
+        @TempData["ViewMessage"]
     </div>
 }
 

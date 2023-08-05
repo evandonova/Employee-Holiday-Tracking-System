@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authorization;
 using EmployeeHolidayTrackingSystem.Services.Requests;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.RequestStatuses;
+using EmployeeHolidayTrackingSystem.Web.Areas.Shared;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Requests;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
@@ -63,16 +64,14 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
 
             var startDate = DateTime.Parse(model.StartDate);
             var endDate = DateTime.Parse(model.EndDate);
-
-            var holidayDaySpan = endDate.Subtract(startDate);
-            var holidayDaysCount = holidayDaySpan.Days + 1;
+            var holidayDaysCount = BusinessDaysCounter.GetDaysCount(startDate, endDate);
 
             var employeeId = await this.requests.GetRequestEmployeeIdAsync(model.Id);
 
-            // If employee requests more days than they have remaining
+            // If the employee requested more days than they have remaining, the request cannot be approved
             if (!await this.employees.CheckIfEmployeeHasEnoughHolidayDaysAsync(employeeId, holidayDaysCount))
             {
-                TempData["message"] = "The Employee has less holiday days remaining than requested. You cannot approve their request.";
+                TempData["ViewMessage"] = "The employee has less holiday days remaining than requested. You cannot approve their request!";
                 return View("~/Areas/Supervisors/Views/Requests/Respond.cshtml", model);
             }
 

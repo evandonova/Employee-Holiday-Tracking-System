@@ -1,6 +1,7 @@
 ﻿using System.Globalization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Authorization;
+using EmployeeHolidayTrackingSystem.Web.Areas.Shared;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
 using EmployeeHolidayTrackingSystem.Web.Areas.Employees.Models.Requests;
 using EmployeeHolidayTrackingSystem.Services.Requests;
@@ -108,15 +109,13 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                 return View(requestModel);
             }
 
-            var holidayDaySpan = endDate.Subtract(startDate);
-            var holidayDaysCount = holidayDaySpan.Days + 1;
-
             var employeeId = await this.employees.GetEmployeeIdByUserIdAsync(this.User.Id()!);
+            var holidayDaysCount = BusinessDaysCounter.GetDaysCount(startDate, endDate);
 
             // If employee requests more days than they have remaining
             if (!await this.employees.CheckIfEmployeeHasEnoughHolidayDaysAsync(employeeId, holidayDaysCount))
             {
-                TempData["message"] = "You try to request more holiday days than you have remaining.";
+                TempData["ViewMessage"] = "You try to request more holiday days than you have remaining.";
                 return View(requestModel);
             }
 
