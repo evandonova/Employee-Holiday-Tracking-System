@@ -13,10 +13,11 @@ We have **three user roles** in the app - **admin**, **supervisor** and **employ
 We have **one seeded employee** in the database with login credentials `employee@mail.com` - `employee123#`.
 
 <kbd>
-  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/425290d6-f7b0-491c-81e9-0560c947bacf" height="300">
+  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/425290d6-f7b0-491c-81e9-0560c947bacf" width="600">
 </kbd>
+
 <kbd>
-  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/85aa107c-4d68-4c22-9795-c389ed91c073" height="300">
+  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/85aa107c-4d68-4c22-9795-c389ed91c073" width="600">
 </kbd>
 
 ### Supervisor
@@ -29,16 +30,17 @@ We have **one seeded employee** in the database with login credentials `employee
  - Can see pending requests from their employees.
  - Can approve and disapprove employees holiday requests.
    - When they want to approve a request, the employee that requested it should have enough holiday days remaining.
+     - The count of remaining holiday days of the employee is decreased by the requested days count (**weekend days are not included**).
    - When they want to disapprove a request, they should provide a statement why.
 
 We have **one seeded supervisor** in the database with login credentials `supervisor@mail.com` - `supervisor123#`.
 
 <kbd>
-  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/bb142254-b128-45cd-8fd3-577f8604ca89" width="500">
+  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/bb142254-b128-45cd-8fd3-577f8604ca89" width="600">
 </kbd>
 
 <kbd>
-  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/2367c881-bc03-4b5f-be32-244f417ef037" height="250">
+  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/2367c881-bc03-4b5f-be32-244f417ef037" width="600">
 </kbd>
 
 
@@ -53,7 +55,7 @@ We have **one seeded supervisor** in the database with login credentials `superv
 Admin **login credentials**: `admin@mail.com` - `admin123#`.
 
 <kbd>
-  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/c19c0a64-3df8-44c4-b901-cdaa2b8b0594" height="300">
+  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/c19c0a64-3df8-44c4-b901-cdaa2b8b0594" width="600">
 </kbd>
 
 ## Technologies Used
