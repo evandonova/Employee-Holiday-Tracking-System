@@ -94,7 +94,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             }
 
             await this.employees.EditEmployeeAsync(model.Id, model.FirstName, 
-                model.LastName, model.Email, model.NewPassword);
+                model.LastName, model.Email, model.NewPassword?.Trim());
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
