@@ -108,7 +108,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
             var supervisorId = await this.employees.GetEmployeeSupervisorIdAsync(employeeId);
 
-            await this.requests.CreateAsync(startDate, endDate, employeeId, supervisorId);
+            try
+            {
+                await this.requests.CreateAsync(startDate, endDate, employeeId, supervisorId);
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to create your request! Please try again later or contact administrator!";
+                return View(requestModel);
+            }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

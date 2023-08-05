@@ -76,9 +76,16 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View("~/Areas/Supervisors/Views/Requests/Respond.cshtml", model);
             }
 
-            await this.requests.UpdateRequestToApprovedAsync(model.Id);
-
-            await this.employees.SubtractEmployeeHolidayDaysAsync(employeeId, holidayDaysCount);
+            try
+            {
+                await this.requests.UpdateRequestToApprovedAsync(model.Id);
+                await this.employees.SubtractEmployeeHolidayDaysAsync(employeeId, holidayDaysCount);
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to approve your request! Please try again later or contact administrator!";
+                return View("~/Areas/Supervisors/Views/Requests/Respond.cshtml", model);
+            }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
@@ -98,7 +105,15 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return BadRequest();
             }
 
-            await this.requests.UpdateDisapprovedRequestAsync(id, model.Statement);
+            try
+            {
+                await this.requests.UpdateDisapprovedRequestAsync(id, model.Statement);
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to disapprove your request! Please try again later or contact administrator!";
+                return View(model);
+            }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

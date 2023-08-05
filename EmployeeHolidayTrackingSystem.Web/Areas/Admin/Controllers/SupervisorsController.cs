@@ -41,8 +41,16 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
                 return View(model);
             }
 
-            await this.supervisors.CreateSupervisorAsync(model.FirstName, model.LastName,
-                model.Email, model.Password, SupervisorRoleName);
+            try
+            {
+                await this.supervisors.CreateSupervisorAsync(model.FirstName, model.LastName,
+                    model.Email, model.Password, SupervisorRoleName);
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to add your supervisor! Please try again later or contact administrator!";
+                return View(model);
+            }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
@@ -87,20 +95,37 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
                 return View("Details", model);
             }
 
-            await this.supervisors.EditSupervisorAsync(model.Id, model.FirstName, model.LastName, model.Email, model.NewPassword?.Trim());
+            try
+            {
+                await this.supervisors.EditSupervisorAsync(model.Id, model.FirstName, model.LastName, 
+                    model.Email, model.NewPassword?.Trim());
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to edit your supervisor! Please try again later or contact administrator!";
+                return View("Details", model);
+            }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(string id)
+        public async Task<IActionResult> Delete(UserDetailsBaseFormModel model)
         {
-            if (!await this.supervisors.SupervisorExistsAsync(id))
+            if (!await this.supervisors.SupervisorExistsAsync(model.Id))
             {
                 return BadRequest();
             }
 
-            await this.supervisors.DeleteSupervisorAsync(id);
+            try
+            {
+                await this.supervisors.DeleteSupervisorAsync(model.Id);
+            }
+            catch (Exception)
+            {
+                TempData["ErrorMessage"] = "Unexpected error occurred while trying to delete your supervisor! Please try again later or contact administrator!";
+                return View("Details", model);
+            }
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
