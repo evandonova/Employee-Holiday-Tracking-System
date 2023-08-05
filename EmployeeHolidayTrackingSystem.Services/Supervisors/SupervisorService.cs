@@ -106,9 +106,10 @@ namespace EmployeeHolidayTrackingSystem.Services.Supervisors
             await this.employees.DeleteEmployeesBySupervisorIdAsync(supervisor.Id.ToString());
 
             this.data.Supervisors.Remove(supervisor);
-            await this.data.SaveChangesAsync();
 
             await this.users.DeleteUserAsync(supervisor.UserId);
+
+            await this.data.SaveChangesAsync();
         }
     }
 }

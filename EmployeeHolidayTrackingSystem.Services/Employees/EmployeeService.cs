@@ -150,9 +150,10 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             await this.requests.DeleteEmployeeRequestsAsync(employee.Id.ToString());
 
             this.data.Employees.Remove(employee);
-            await this.data.SaveChangesAsync();
 
             await this.users.DeleteUserAsync(employee.UserId);
+
+            await this.data.SaveChangesAsync();
         }
 
         public async Task DeleteEmployeesBySupervisorIdAsync(string supervisorId)
@@ -168,12 +169,13 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             var employeeUserIds = supervisor.Employees.Select(e => e.UserId).ToList();
 
             this.data.Employees.RemoveRange(supervisor.Employees);
-            await this.data.SaveChangesAsync();
 
             foreach (var userId in employeeUserIds)
             {
                 await this.users.DeleteUserAsync(userId);
             }
+
+            await this.data.SaveChangesAsync();
         }
     }
 }

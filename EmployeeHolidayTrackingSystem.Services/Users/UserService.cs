@@ -28,7 +28,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
             newUser.PasswordHash = hasher.HashPassword(newUser, password);
 
             await this.data.Users.AddAsync(newUser);
-            await this.data.SaveChangesAsync();
 
             return newUser.Id;
         }
@@ -44,7 +43,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
 
         public async Task AddUserToRoleAsync(string userId, string roleName)
         {
-            var user = await this.data.Users.FirstAsync(u => u.Id == userId);
             var role = await this.data.Roles.FirstAsync(r => r.Name == roleName);
 
             var userInRole = new IdentityUserRole<string>()
@@ -54,7 +52,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
             };
 
             await this.data.UserRoles.AddAsync(userInRole);
-            await this.data.SaveChangesAsync();
         }
 
         public async Task UpdatePasswordAsync(string userId, string newPassword)
@@ -63,8 +60,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
 
             var hasher = new PasswordHasher<User>();
             user.PasswordHash = hasher.HashPassword(user, newPassword);
-
-            await this.data.SaveChangesAsync();
         }
 
         public async Task UpdateEmailAsync(string userId, string newEmail)
@@ -76,8 +71,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
 
             user.UserName = newEmail;
             user.NormalizedUserName = newEmail.ToUpper();
-
-            await this.data.SaveChangesAsync();
         }
 
         public async Task DeleteUserAsync(string userId)
@@ -85,7 +78,6 @@ namespace EmployeeHolidayTrackingSystem.Services.Users
             var user = await this.data.Users.FirstAsync(x => x.Id == userId);
 
             this.data.Users.Remove(user);
-            await this.data.SaveChangesAsync();
         }
     }
 }
