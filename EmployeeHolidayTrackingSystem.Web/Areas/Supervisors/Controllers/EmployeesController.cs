@@ -4,11 +4,11 @@ using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Supervisors;
 using EmployeeHolidayTrackingSystem.Web.Infrastructure;
+using EmployeeHolidayTrackingSystem.Web.Areas.Shared.Models;
 using EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Models.Employees;
 
 using static EmployeeHolidayTrackingSystem.Web.Areas.Employees.EmployeeConstants;
 using static EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.SupervisorConstants;
-using EmployeeHolidayTrackingSystem.Web.Areas.Shared.Models;
 
 namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
 {
@@ -100,14 +100,14 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(EmployeeDetailsFormModel model)
+        public async Task<IActionResult> Delete(string id)
         {
-            if (!await this.employees.EmployeeExistsAsync(model.Id))
+            if (!await this.employees.EmployeeExistsAsync(id))
             {
                 return BadRequest();
             }
 
-            await this.employees.DeleteEmployeeAsync(model.Id);
+            await this.employees.DeleteEmployeeAsync(id);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

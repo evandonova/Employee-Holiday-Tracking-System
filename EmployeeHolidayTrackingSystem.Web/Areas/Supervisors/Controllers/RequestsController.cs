@@ -61,8 +61,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return BadRequest();
             }
 
-            var startDate = DateTime.Parse(model.StartDate!);
-            var endDate = DateTime.Parse(model.EndDate!);
+            var startDate = DateTime.Parse(model.StartDate);
+            var endDate = DateTime.Parse(model.EndDate);
 
             var holidayDaySpan = endDate.Subtract(startDate);
             var holidayDaysCount = holidayDaySpan.Days + 1;
@@ -83,31 +83,22 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
-        public IActionResult Disapprove(string id)
-        {
-            var model = new DisapprovedRequestFormModel()
-            {
-                Id = id,
-                Statement = string.Empty
-            }; 
-
-            return View(model);
-        }
+        public IActionResult Disapprove() => View();
 
         [HttpPost]
-        public async Task<IActionResult> Disapprove(DisapprovedRequestFormModel model)
+        public async Task<IActionResult> Disapprove(string id, DisapprovedRequestFormModel model)
         {
             if (!ModelState.IsValid)
             {
                 return View(model);
             }
 
-            if (!await this.requests.RequestExistsAsync(model.Id))
+            if (!await this.requests.RequestExistsAsync(id))
             {
                 return BadRequest();
             }
 
-            await this.requests.UpdateDisapprovedRequestAsync(model.Id, model.Statement);
+            await this.requests.UpdateDisapprovedRequestAsync(id, model.Statement);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

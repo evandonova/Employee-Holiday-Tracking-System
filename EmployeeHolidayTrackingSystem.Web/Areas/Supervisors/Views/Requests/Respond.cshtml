@@ -16,8 +16,6 @@
         <form method="post">
             <h4>Holiday Request Details</h4>
 
-            <input asp-for="Id" type="hidden" />
-
             <label asp-for="StartDate"></label>
             <input id="startDayFixed" asp-for="StartDate" class="form-control col-1" readonly>
 
@@ -29,7 +27,10 @@
 
             <label asp-for="Employee.HolidayDaysRemaining"></label>
             <input asp-for="Employee.HolidayDaysRemaining" class="form-control col-1" readonly>
-            <input asp-area="Supervisors" asp-controller="Requests" asp-action="Approve" class="btn btn-primary mb-3" type="submit" value="Approve" />
+
+            <input asp-area="Supervisors" asp-controller="Requests" asp-action="Approve"
+                   asp-route-id="@Model.Id" class="btn btn-primary mb-3" type="submit" value="Approve" />
+
             <a asp-area="Supervisors" asp-controller="Requests" asp-action="Disapprove"
                asp-route-id="@Model.Id" class="btn btn-primary">Disapprove</a>
         </form>

@@ -93,14 +93,14 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Admin.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Delete(UserDetailsBaseFormModel model)
+        public async Task<IActionResult> Delete(string id)
         {
-            if (!await this.supervisors.SupervisorExistsAsync(model.Id))
+            if (!await this.supervisors.SupervisorExistsAsync(id))
             {
                 return BadRequest();
             }
 
-            await this.supervisors.DeleteSupervisorAsync(model.Id);
+            await this.supervisors.DeleteSupervisorAsync(id);
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
