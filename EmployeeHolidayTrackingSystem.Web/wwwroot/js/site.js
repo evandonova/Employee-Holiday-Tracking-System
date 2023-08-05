@@ -51,10 +51,10 @@ function createCalendar(date, side, startDateAsText, endDateAsText) {
         var lastDay = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
         lastDay = lastDay.getDate();
 
-        createDayCels();
+        createDayCells();
         createEmptyMonthEndCells();
 
-        function createDayCels() {
+        function createDayCells() {
             for (let i = 1; i <= lastDay; i++) {
                 if (currentTr.children.length >= 7) {
                     currentTr = gridTableElement.appendChild(addNewRow());
@@ -107,9 +107,10 @@ function createCalendar(date, side, startDateAsText, endDateAsText) {
                 }
 
                 function addCellDayNumber() {
-                    if ((currentDate.getMonth() == todaysDate.getMonth() && i < todaysDate.getDate())
-                        || currentDate.getMonth() < todaysDate.getMonth()
-                        || currentDate.getFullYear() < todaysDate.getFullYear()) {
+                    var currentDayAtMidnight = new Date(currentDate.getFullYear(), currentDate.getMonth(), i);
+                    var todaysDateAtMidnight = new Date(todaysDate.getFullYear(), todaysDate.getMonth(), todaysDate.getDate());
+
+                    if (currentDayAtMidnight < todaysDateAtMidnight || currentDayAtMidnight.getDay() == 0 || currentDayAtMidnight.getDay() == 6) {
                         currentDayDiv.innerHTML = `<s>${i}</s>`;
                     }
                     else {
@@ -134,7 +135,7 @@ function createCalendar(date, side, startDateAsText, endDateAsText) {
             return node;
         }
 
-         function createEmptyMonthEndCells() {
+        function createEmptyMonthEndCells() {
             for (let i = currentTr.getElementsByTagName("div").length; i < 7; i++) {
                 let emptyDivCol = document.createElement("div");
                 emptyDivCol.className = "col empty-day";
@@ -265,5 +266,5 @@ function getDateAsString(selectedDate) {
         "July", "August", "September", "October", "November", "December"
     ];
 
-    return day + " " + monthNames[month] + " " + year; 
+    return day + " " + monthNames[month] + " " + year;
 }

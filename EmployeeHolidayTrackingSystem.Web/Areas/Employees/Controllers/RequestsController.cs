@@ -82,11 +82,25 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
             var startDate = DateTime.Parse(requestModel.StartDate);
             var endDate = DateTime.Parse(requestModel.EndDate);
 
-            // If end date is before start date, add error message
+            // If the end date is before the start date, show error message
             if (endDate < startDate)
             {
                 ModelState.AddModelError(nameof(requestModel.EndDate),
-                    "End date should be after start date.");
+                    "The end date should be after the start date.");
+            }
+
+            if (startDate.DayOfWeek == DayOfWeek.Saturday 
+                || startDate.DayOfWeek == DayOfWeek.Sunday)
+            {
+                ModelState.AddModelError(nameof(requestModel.StartDate),
+                    "Start date cannot be a weekend day.");
+            }
+
+            if (endDate.DayOfWeek == DayOfWeek.Saturday
+                || endDate.DayOfWeek == DayOfWeek.Sunday)
+            {
+                ModelState.AddModelError(nameof(requestModel.EndDate),
+                    "End date cannot be a weekend day.");
             }
 
             if (!ModelState.IsValid)
