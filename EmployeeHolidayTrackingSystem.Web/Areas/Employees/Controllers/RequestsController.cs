@@ -131,6 +131,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                 return View(requestModel);
             }
 
+            TempData["SuccessMessage"] = "You have successfully created a new holiday request.";
+
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
     }

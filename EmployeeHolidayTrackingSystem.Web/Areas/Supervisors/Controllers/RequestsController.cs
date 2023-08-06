@@ -86,6 +86,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View("~/Areas/Supervisors/Views/Requests/Respond.cshtml", model);
             }
 
+            TempData["SuccessMessage"] = "You have successfully approved the holiday request.";
+
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
@@ -113,6 +115,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 TempData["ErrorMessage"] = "Unexpected error occurred while trying to disapprove your request! Please try again later or contact administrator!";
                 return View(model);
             }
+
+            TempData["SuccessMessage"] = "You have successfully disapproved the holiday request.";
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

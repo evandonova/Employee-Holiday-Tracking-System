@@ -57,6 +57,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View(model);
             }
 
+            TempData["SuccessMessage"] = "You have successfully added a new employee.";
+
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
@@ -112,6 +114,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 return View("Details", model);
             }
 
+            TempData["SuccessMessage"] = "You have successfully edited the employee.";
+
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }
 
@@ -132,6 +136,8 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
                 TempData["ErrorMessage"] = "Unexpected error occurred while trying to delete your employee! Please try again later or contact administrator!";
                 return View("Details", model);
             }
+
+            TempData["SuccessMessage"] = "You have successfully deleted the employee.";
 
             return RedirectToAction(nameof(HomeController.Index), "Home");
         }

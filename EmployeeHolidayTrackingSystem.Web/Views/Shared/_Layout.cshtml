@@ -19,7 +19,21 @@
     <header>
         @if (TempData.ContainsKey("ErrorMessage"))
         {
-            <script>toastr.error('@TempData["ErrorMessage"]');</script>
+            <script>
+                toastr.options = {
+                    toastClass: 'toastr-fixed-width'
+                }; 
+                toastr.error('@TempData["ErrorMessage"]');
+            </script>
+        }
+        @if (TempData.ContainsKey("SuccessMessage"))
+        {
+            <script>
+                toastr.options = {
+                    toastClass: 'toastr-fixed-width'
+                };
+                toastr.success('@TempData["SuccessMessage"]');
+            </script>
         }
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
             <div class="container-fluid">
@@ -47,7 +61,6 @@
             &copy; @DateTime.UtcNow.Year - Employee Holiday Tracking System
         </div>
     </footer>
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     @await RenderSectionAsync("Scripts", required: false)
