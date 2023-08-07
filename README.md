@@ -59,12 +59,16 @@ Admin **login credentials**: `admin@mail.com` - `admin123#`.
 </kbd>
 
 ## Technologies Used
-Include ASP.NET Core, Entity Framework Code, SQL Server, HTML, CSS, JavaScript.
+Include ASP.NET Core, Entity Framework Code, SQL Server, HTML, CSS, JavaScript, NUnit.
 
 ## Database Schema
 <kbd>
   <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/c1b3b169-6a80-4d9d-a103-6195bc387c6a" height="300">
 </kbd>
 
+## Unit Tests
+I cover most of my service methods' logic with **unit tests**.
 
- 
+<kbd>
+  <img src="https://github.com/evandonova/Employee-Holiday-Tracking-System/assets/69080997/176e6217-5287-44f8-8ef4-c7d24cf5bd6f" height="200">
+</kbd>
