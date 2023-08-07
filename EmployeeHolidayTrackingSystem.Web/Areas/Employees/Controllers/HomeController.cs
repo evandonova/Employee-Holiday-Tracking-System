@@ -26,7 +26,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var employee = await this.employees.GetEmployeeProfileDataAsync(this.User.Id()!);
+            var employee = await this.employees.GetEmployeeProfileDataByUserIdAsync(this.User.Id()!);
 
             var requests = await this.requests.GetEmployeeRequestsAsync(employee.Id);
 

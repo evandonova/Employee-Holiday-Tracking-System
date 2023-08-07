@@ -55,7 +55,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
                                         .Run(async () =>
                                         {
                                             return await this.requests
-                                                .GetDisapprovalStatementAsync(request.Id);
+                                                .GetRequestDisapprovalStatementAsync(request.Id);
                                         })
                                        .GetAwaiter()
                                        .GetResult()
@@ -123,7 +123,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Employees.Controllers
 
             try
             {
-                await this.requests.CreateAsync(startDate, endDate, employeeId, supervisorId);
+                await this.requests.CreateRequestAsync(startDate, endDate, employeeId, supervisorId);
             }
             catch (Exception)
             {

@@ -62,7 +62,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
             return employee.HolidayDaysRemaining > days;
         }
 
-        public async Task<EmployeeServiceModel> GetEmployeeProfileDataAsync(string userId)
+        public async Task<EmployeeServiceModel> GetEmployeeProfileDataByUserIdAsync(string userId)
             => await this.data.Employees
                 .Where(e => e.UserId == userId)
                 .Select(e => new EmployeeServiceModel()
@@ -87,7 +87,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
                 })
                 .FirstAsync();
 
-        public async Task<List<EmployeeServiceModel>> GetSupervisorEmployeesAsync(string supervisorId)
+        public async Task<List<EmployeeServiceModel>> GetEmployeesBySupervisorIdAsync(string supervisorId)
             => await this.data.Employees
                 .Where(e => e.SupervisorId.ToString() == supervisorId)
                 .Select(e => new EmployeeServiceModel()

@@ -47,7 +47,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             return $"{request.Employee.User.FirstName} {request.Employee.User.LastName}";
         }
 
-        public async Task<string?> GetDisapprovalStatementAsync(string requestId)
+        public async Task<string?> GetRequestDisapprovalStatementAsync(string requestId)
         {
             var request = await this.data.HolidayRequests
                 .FirstAsync(r => r.Id.ToString() == requestId);
@@ -55,7 +55,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
             return request.DisapprovalStatement;
         }
 
-        public async Task CreateAsync(DateTime startDate, DateTime endDate, string employeeId, string supervisorId)
+        public async Task CreateRequestAsync(DateTime startDate, DateTime endDate, string employeeId, string supervisorId)
         {
             var request = new HolidayRequest()
             {

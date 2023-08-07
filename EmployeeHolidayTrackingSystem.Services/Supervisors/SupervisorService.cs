@@ -1,9 +1,9 @@
-﻿using EmployeeHolidayTrackingSystem.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using EmployeeHolidayTrackingSystem.Data;
 using EmployeeHolidayTrackingSystem.Data.Models;
 using EmployeeHolidayTrackingSystem.Services.Users;
 using EmployeeHolidayTrackingSystem.Services.Employees;
 using EmployeeHolidayTrackingSystem.Services.Supervisors.Models;
-using Microsoft.EntityFrameworkCore;
 
 namespace EmployeeHolidayTrackingSystem.Services.Supervisors
 {

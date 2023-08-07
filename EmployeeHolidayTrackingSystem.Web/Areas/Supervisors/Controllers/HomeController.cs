@@ -32,7 +32,7 @@ namespace EmployeeHolidayTrackingSystem.Web.Areas.Supervisors.Controllers
         {
             var supervisorId = await this.supervisors.GetSupervisorIdByUserIdAsync(this.User.Id()!);
 
-            var employees = await this.employees.GetSupervisorEmployeesAsync(supervisorId);
+            var employees = await this.employees.GetEmployeesBySupervisorIdAsync(supervisorId);
 
             var employeesModel = employees
                 .Select(e => new EmployeeViewModel()

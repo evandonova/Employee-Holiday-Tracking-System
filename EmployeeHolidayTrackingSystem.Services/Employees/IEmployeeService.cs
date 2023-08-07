@@ -18,11 +18,11 @@ namespace EmployeeHolidayTrackingSystem.Services.Employees
 
         Task<bool> CheckIfEmployeeHasEnoughHolidayDaysAsync(string employeeId, int days);
 
-        Task<EmployeeServiceModel> GetEmployeeProfileDataAsync(string userId);
+        Task<EmployeeServiceModel> GetEmployeeProfileDataByUserIdAsync(string userId);
 
         Task<EmployeeDetailsServiceModel> GetEmployeeDetailsAsync(string employeeId);
 
-        Task<List<EmployeeServiceModel>> GetSupervisorEmployeesAsync(string supervisorId);
+        Task<List<EmployeeServiceModel>> GetEmployeesBySupervisorIdAsync(string supervisorId);
 
         Task CreateEmployeeAsync(string firstName, string lastName,
             string email, string password, string supervisorId, string employeeRoleName);

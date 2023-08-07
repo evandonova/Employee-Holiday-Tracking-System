@@ -17,7 +17,7 @@ namespace EmployeeHolidayTrackingSystem.Services.Supervisors
         Task<List<SupervisorServiceModel>> GetAllSupervisorsAsync();
 
         Task CreateSupervisorAsync(string firstName, string lastName,
-            string email, string password, string employeeRoleName);
+            string email, string password, string supervisorRoleName);
 
         Task EditSupervisorAsync(string id, string firstName, string lastName,
             string email, string? newPassword);

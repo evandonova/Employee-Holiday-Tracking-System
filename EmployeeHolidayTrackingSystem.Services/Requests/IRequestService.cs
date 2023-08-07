@@ -12,9 +12,9 @@ namespace EmployeeHolidayTrackingSystem.Services.Requests
 
         Task<string> GetRequestStatusTitleAsync(string requestId);
 
-        Task<string?> GetDisapprovalStatementAsync(string requestId);
+        Task<string?> GetRequestDisapprovalStatementAsync(string requestId);
 
-        Task CreateAsync(DateTime startDate, DateTime endDate, string employeeId, string supervisorId);
+        Task CreateRequestAsync(DateTime startDate, DateTime endDate, string employeeId, string supervisorId);
 
         Task UpdateRequestToApprovedAsync(string requestId);
 
